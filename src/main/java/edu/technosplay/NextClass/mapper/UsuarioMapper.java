@@ -1,33 +1,48 @@
 package edu.technosplay.NextClass.mapper;
 
-import edu.technosplay.NextClass.dto.request.AlunoRequest;
+import edu.technosplay.NextClass.dto.request.UsuarioRequest;
 import edu.technosplay.NextClass.dto.response.UsuarioResponse;
-import edu.technosplay.NextClass.model.Aluno;
+import edu.technosplay.NextClass.model.Usuario;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class AlunoMapper {
-    public static Aluno toEntity(AlunoRequest request) {
-        return Aluno.builder()
+public class UsuarioMapper {
+    public static Usuario toEntity(UsuarioRequest request) {
+        return Usuario.builder()
                 .nome(request.nome())
                 .cpf(request.cpf())
                 .email(request.email())
                 .telefone(request.telefone())
                 .dataNascimento(request.dataNascimento())
-                .endereco(request.endereco())
+                .logradouro(request.logradouro())
+                .complemento(request.complemento())
+                .numero(request.numero())
+                .bairro(request.bairro())
+                .cidade(request.cidade())
+                .estado(request.estado())
+                .cep(request.cep())
                 .build();
     }
 
-    public static UsuarioResponse toResponse(Aluno aluno) {
+    public static UsuarioResponse toResponse(Usuario usuario) {
         return UsuarioResponse.builder()
-                .id(aluno.getId())
-                .nome(aluno.getNome())
-                .cpf(aluno.getCpf())
-                .email(aluno.getEmail())
-                .telefone(aluno.getTelefone())
-                .dataNascimento(aluno.getDataNascimento())
-                .status(aluno.getStatus())
-                .criadoEm(aluno.getCriadoEm())
+                .id(usuario.getId())
+                .nome(usuario.getNome())
+                .cpf(usuario.getCpf())
+                .email(usuario.getEmail())
+                .telefone(usuario.getTelefone())
+                .dataNascimento(usuario.getDataNascimento())
+                .role(usuario.getRole())
+                .ativo(usuario.isAtivo())
+                .logradouro(usuario.getLogradouro())
+                .numero(usuario.getNumero())
+                .complemento(usuario.getComplemento())
+                .bairro(usuario.getBairro())
+                .cidade(usuario.getCidade())
+                .estado(usuario.getEstado())
+                .cep(usuario.getCep())
+                .criadoEm(usuario.getCriadoEm())
+                .atualizadoEm(usuario.getAtualizadoEm())
                 .build();
     }
 }
