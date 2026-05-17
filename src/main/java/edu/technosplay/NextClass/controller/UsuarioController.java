@@ -1,83 +1,89 @@
 package edu.technosplay.NextClass.controller;
 
-import edu.technosplay.NextClass.dto.request.AlunoRequest;
-import edu.technosplay.NextClass.dto.response.AlunoResponse;
+import edu.technosplay.NextClass.dto.response.UsuarioResponse;
 import edu.technosplay.NextClass.dto.response.PageResponse;
-import edu.technosplay.NextClass.model.enums.StatusAluno;
-import edu.technosplay.NextClass.service.AlunoService;
+import edu.technosplay.NextClass.model.enums.Role;
+import edu.technosplay.NextClass.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/nextclass/alunos")
-@RequiredArgsConstructor
-public class AlunoController {
-    private final AlunoService service;
+import java.util.List;
 
-    @PostMapping
-    @Operation(summary = "Cadastrar aluno", description = "Realiza o cadastro de um novo aluno")
-    @ApiResponse(responseCode = "201", description = "Aluno cadastrado com sucesso")
-    @ApiResponse(responseCode = "400", description = "Dados inválidos")
-    @ApiResponse(responseCode = "409", description = "CPF ou e-mail já cadastrado")
-    public ResponseEntity<AlunoResponse> criar(@RequestBody @Valid AlunoRequest request) {
-        AlunoResponse response = service.criar(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+@RestController
+@RequestMapping("/nextclass/usuarios")
+@RequiredArgsConstructor
+@Tag(name = "Usuários", description = "Gerenciamento de usuários")
+public class UsuarioController {
+    private final UsuarioService usuarioService;
 
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar aluno por ID")
-    @ApiResponse(responseCode = "200", description = "Aluno encontrado")
-    @ApiResponse(responseCode = "404", description = "Aluno não encontrado")
-    public ResponseEntity<AlunoResponse> buscarPorId(
-            @Parameter(description = "ID do aluno") @PathVariable Long id) {
-        return ResponseEntity.ok(service.buscarPorId(id));
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "Atualizar aluno")
-    @ApiResponse(responseCode = "200", description = "Aluno atualizado com sucesso")
-    public ResponseEntity<AlunoResponse> atualizar(
-            @PathVariable Long id,
-            @RequestBody @Valid AlunoRequest request) {
-        return ResponseEntity.ok(service.atualizar(id, request));
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Inativar aluno")
-    @ApiResponse(responseCode = "204", description = "Aluno inativado com sucesso")
-    public ResponseEntity<Void> inativar(@PathVariable Long id) {
-        service.inativar(id);
-        return ResponseEntity.noContent().build();
+    @Operation(
+            summary = "Buscar usuário por ID",
+            description = "Retorna os dados de um usuário específico pelo seu ID."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Usuário encontrado"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
+    public ResponseEntity<UsuarioResponse> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(usuarioService.buscarPorId(id));
     }
 
     @GetMapping
-    @Operation(summary = "Listar todos os alunos")
-    public ResponseEntity<PageResponse<AlunoResponse>> listar(
-            @PageableDefault(size = 20, sort = "nome") Pageable pageable) {
-        return ResponseEntity.ok(PageResponse.de(service.listar(pageable)));
+    @Operation(
+            summary = "Listar usuários",
+            description = "Lista todos os usuários com filtros opcionais de role e/ou status. " +
+                    "Todos os parâmetros são opcionais e podem ser combinados"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
+    })
+    //@PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UsuarioResponse>> listar(
+            @Parameter(description = "Filtrar por role (ALUNO, PROFESSOR, COORDENADOR)")
+            @RequestParam(required = false) Role role,
+            @Parameter(description = "Filtrar por status: true = ativos, false = inativos")
+            @RequestParam(required = false) Boolean ativo) {
+        return ResponseEntity.ok(usuarioService.listar(role, ativo));
     }
 
-    @GetMapping("/status/{status}")
-    @Operation(summary = "Listar alunos por status")
-    public ResponseEntity<PageResponse<AlunoResponse>> listarPorStatus(
-            @PathVariable StatusAluno status,
-            @PageableDefault(size = 20, sort = "nome") Pageable pageable) {
-        return ResponseEntity.ok(PageResponse.de(service.listar(pageable)));
+    @PatchMapping("/{id}/desativar")
+    @Operation(
+            summary = "Desativar usuário",
+            description = "Desativa a conta de um usuário pelo ID, impedindo que ele acesse o sistema."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Usuário desativado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
+    //@PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UsuarioResponse> desativar(
+            @Parameter(description = "ID do usuário", example = "1")
+            @PathVariable Long id) {
+        return ResponseEntity.ok(usuarioService.desativar(id));
     }
 
-    @GetMapping("/buscar")
-    @Operation(summary = "Buscar alunos por nome, CPF ou e-mail")
-    public ResponseEntity<PageResponse<AlunoResponse>> buscar(
-            @Parameter(description = "Termo de busca") @RequestParam String termo,
-            @PageableDefault(size = 20, sort = "nome") Pageable pageable) {
-        return ResponseEntity.ok(PageResponse.de(service.listar(pageable)));
+    @PatchMapping("/{id}/ativar")
+    @Operation(
+            summary = "Ativar usuário",
+            description = "Ativa a conta de um usuário pelo ID, permitindo que ele acesse o sistema."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Usuário ativado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
+    //@PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UsuarioResponse> ativar(
+            @Parameter(description = "ID do usuário", example = "1")
+            @PathVariable Long id) {
+        return ResponseEntity.ok(usuarioService.ativar(id));
     }
 }
