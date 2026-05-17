@@ -1,12 +1,12 @@
 package edu.technosplay.NextClass.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import edu.technosplay.NextClass.model.enums.Role;
 import jakarta.validation.constraints.*;
-import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
 
-public record AlunoRequest(
+public record UsuarioRequest(
         @NotBlank(message = "Nome é obrigatório")
         @Size(min = 3, max = 100, message = "Nome completo deve ter entre 3 e 100 caracteres")
         String nome,
@@ -26,7 +26,7 @@ public record AlunoRequest(
         String senha,
 
         @NotBlank(message = "Telefone é obrigatório")
-        //@Pattern(regexp = "^\\d{11}", message = "Telefone inválido. Use o formato (XX) XXXXX-XXXX")
+        //@Pattern(regexp = "^\\d{11}", message = "Telefone inválido. Use somente valores numéricos")
         String telefone,
 
         @NotNull(message = "Data de nascimento é obrigatória")
@@ -42,7 +42,10 @@ public record AlunoRequest(
         String estado,
 
         @Pattern(regexp = "\\d{8}", message = "CEP deve conter 8 dígitos numéricos")
-        String cep
+        String cep,
+
+        @NotNull(message = "Role é obrigatória")
+        Role role
 
 ) {
 }
