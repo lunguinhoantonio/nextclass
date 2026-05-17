@@ -1,7 +1,7 @@
 package edu.technosplay.NextClass.service.impl;
 
 import edu.technosplay.NextClass.dto.request.AlunoRequest;
-import edu.technosplay.NextClass.dto.response.AlunoResponse;
+import edu.technosplay.NextClass.dto.response.UsuarioResponse;
 import edu.technosplay.NextClass.exception.RecursoDuplicadoException;
 import edu.technosplay.NextClass.exception.RecursoNaoEncontradoException;
 import edu.technosplay.NextClass.exception.RegraDeNegocioException;
@@ -14,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-@Service
 @RequiredArgsConstructor
 @Slf4j
 public class AlunoServiceImpl implements AlunoService {
@@ -25,7 +22,7 @@ public class AlunoServiceImpl implements AlunoService {
 
     @Override
     @Transactional
-    public AlunoResponse criar(AlunoRequest request) {
+    public UsuarioResponse criar(AlunoRequest request) {
         log.info("Criando aluno com CPF: {}", request.cpf());
 
         validarCpfUnico(request.cpf(), null);
@@ -49,12 +46,12 @@ public class AlunoServiceImpl implements AlunoService {
 
     @Override
     @Transactional(readOnly = true)
-    public AlunoResponse buscarPorId(Long id) {
+    public UsuarioResponse buscarPorId(Long id) {
         return AlunoMapper.toResponse(encontrarPorId(id));
     }
 
     @Override
-    public AlunoResponse atualizar(Long id, AlunoRequest request) {
+    public UsuarioResponse atualizar(Long id, AlunoRequest request) {
         log.info("Atualizando aluno ID: {}", id);
 
         Aluno aluno = encontrarPorId(id);
@@ -87,19 +84,19 @@ public class AlunoServiceImpl implements AlunoService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<AlunoResponse> listar(Pageable pageable) {
+    public Page<UsuarioResponse> listar(Pageable pageable) {
         return alunoRepository.findAll(pageable).map(AlunoMapper::toResponse);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<AlunoResponse> listarPorStatus(StatusAluno status, Pageable pageable) {
+    public Page<UsuarioResponse> listarPorStatus(StatusAluno status, Pageable pageable) {
         return alunoRepository.findByStatus(status, pageable).map(AlunoMapper::toResponse);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<AlunoResponse> buscarPorTermo(String termo, Pageable pageable) {
+    public Page<UsuarioResponse> buscarPorTermo(String termo, Pageable pageable) {
         return alunoRepository.buscarPorTermo(termo, pageable).map(AlunoMapper::toResponse);
     }
 

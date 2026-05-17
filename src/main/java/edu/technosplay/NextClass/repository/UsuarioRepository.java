@@ -19,9 +19,9 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
     boolean existsByEmail(String email);
     Page<Aluno> findByStatus(StatusAluno status, Pageable pageable);
 
-    @Query("SELECT a FROM Aluno a WHERE " +
+    /*@Query("SELECT a FROM Aluno a WHERE " +
             "LOWER(a.nome) LIKE LOWER(CONCAT('%', :termo, '%')) OR " +
             "a.cpf LIKE CONCAT('%', :termo, '%') OR " +
             "LOWER(a.email) LIKE LOWER(CONCAT('%', :termo, '%'))")
-    Page<Aluno> buscarPorTermo(@Param("termo") String termo, Pageable pageable);
+    Page<Aluno> buscarPorTermo(@Param("termo") String termo, Pageable pageable);*/
 }

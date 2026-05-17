@@ -26,28 +26,31 @@ public class Aluno {
     @Column(nullable = false, length = 100)
     private String nome;
 
-    @Column(nullable = false, unique = true, length = 14)
+    @Column(nullable = false, unique = true, length = 11)
     private String cpf;
 
     @Column(nullable = false, unique = true, length = 150)
     private String email;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 11)
     private String telefone;
 
     @Column(nullable = false)
     private LocalDate dataNascimento;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String senha;
 
-    @Column(length = 200)
-    private String endereco;
+    private String logradouro;
+    private String numero;
+    private String complemento;
+    private String bairro;
+    private String cidade;
+    private String estado;
+    private String cep;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @Builder.Default
-    private StatusAluno status = StatusAluno.ATIVO;
+    private boolean ativo = true;
 
     /*@OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

@@ -1,13 +1,13 @@
 package edu.technosplay.NextClass.mapper;
 
 import edu.technosplay.NextClass.dto.request.AlunoRequest;
-import edu.technosplay.NextClass.dto.response.AlunoResponse;
+import edu.technosplay.NextClass.dto.response.UsuarioResponse;
 import edu.technosplay.NextClass.model.Aluno;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class AlunoMapper {
-    public static Aluno toAluno(AlunoRequest request) {
+    public static Aluno toEntity(AlunoRequest request) {
         return Aluno.builder()
                 .nome(request.nome())
                 .cpf(request.cpf())
@@ -18,8 +18,8 @@ public class AlunoMapper {
                 .build();
     }
 
-    public static AlunoResponse toResponse(Aluno aluno) {
-        return AlunoResponse.builder()
+    public static UsuarioResponse toResponse(Aluno aluno) {
+        return UsuarioResponse.builder()
                 .id(aluno.getId())
                 .nome(aluno.getNome())
                 .cpf(aluno.getCpf())
