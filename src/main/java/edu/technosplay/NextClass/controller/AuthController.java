@@ -5,6 +5,8 @@ import edu.technosplay.NextClass.dto.request.UsuarioRequest;
 import edu.technosplay.NextClass.dto.response.UsuarioResponse;
 import edu.technosplay.NextClass.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -45,7 +47,14 @@ public class AuthController {
                     description = "CPF ou e-mail já cadastrado"
             )
     })
-    public ResponseEntity<UsuarioResponse> registrar(@Valid @RequestBody UsuarioRequest request) {
+    public ResponseEntity<UsuarioResponse> registrar(
+            @Valid
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Dados do usuário a ser registrado",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = UsuarioRequest.class))
+            )
+            @RequestBody UsuarioRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.registrar(request));
     }
 }
