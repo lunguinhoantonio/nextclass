@@ -1,13 +1,14 @@
 package edu.technosplay.NextClass.model;
 
+import edu.technosplay.NextClass.model.enums.DiaSemana;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "cursos")
@@ -36,16 +37,22 @@ public class Curso {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private DayOfWeek diaInicio;
+    private DiaSemana diaInicio;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private DayOfWeek diaFim;
+    private DiaSemana diaFim;
 
+    @Column(nullable = false)
     private boolean ativo = true;
 
-    /*@OneToOne
-    private Professor professor;*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "professor_id")
+    private Usuario professor;
+
+    /*@OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Turma> turmas = new ArrayList<>();*/
 
     @CreationTimestamp
     @Column(updatable = false)
