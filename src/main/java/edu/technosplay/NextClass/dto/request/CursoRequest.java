@@ -1,6 +1,5 @@
 package edu.technosplay.NextClass.dto.request;
 
-
 import edu.technosplay.NextClass.model.enums.DiaSemana;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
