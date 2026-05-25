@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(titulo='Início', paginaAtual='inicio', conteudo=~{::main}, estilos=~{::link}, scripts=~{})}">
+<head>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+<body>
+<main>
+
+    <section class="about-system">
+        <div class="about-container">
+            <div class="about-image">
+                <img th:src="@{/assets/logo-icon.png}" alt="Logo NextClass">
+            </div>
+            <div class="about-text">
+                <h2>Por que usar a NextClass?</h2>
+                <p>
+                    A NextClass foi desenvolvida para modernizar instituições
+                    de ensino, permitindo matrículas online, gerenciamento
+                    de turmas e atendimentos de forma rápida e organizada.
+                </p>
+                <a th:href="@{/cadastro}">
+                    <button>Cadastrar</button>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="carousel">
+        <div class="group">
+            <div class="card">Matrícula Online</div>
+            <div class="card">Agendamento Online</div>
+            <div class="card">Acesso Fácil</div>
+            <div class="card">Processo Simplificado</div>
+            <div class="card">Tudo em Um Só Lugar</div>
+        </div>
+        <div class="group" aria-hidden="true">
+            <div class="card">Matrícula Online</div>
+            <div class="card">Agendamento Online</div>
+            <div class="card">Acesso Fácil</div>
+            <div class="card">Processo Simplificado</div>
+            <div class="card">Tudo em Um Só Lugar</div>
+        </div>
+    </div>
+
+    <section id="cursos">
+        <div class="top-cursos">
+            <h2>Cursos Disponíveis</h2>
+            <div th:if="${!#lists.isEmpty(cursos)}" class="ver-mais-cursos">
+                <a th:href="@{/cursos}">Ver mais</a>
+            </div>
+        </div>
+        <div class="lista-cursos">
+
+            <div th:if="${#lists.isEmpty(cursos)}" class="sem-cursos">
+                <p>Nenhum curso disponível no momento.</p>
+            </div>
+
+            <!--<div class="curso">
+                <h3>Técnico em Informática</h3>
+                <p>xx/xx Vagas</p>
+                <a th:href="@{/cursos/1}"><button>Ver mais</button></a>
+            </div>
+            <div class="curso">
+                <h3>Técnico em Administração</h3>
+                <p>xx/xx Vagas</p>
+                <a th:href="@{/cursos/2}"><button>Ver mais</button></a>
+            </div>
+            <div class="curso">
+                <h3>Desenvolvimento de Sistemas</h3>
+                <p>xx/xx Vagas</p>
+                <a th:href="@{/cursos/3}"><button>Ver mais</button></a>
+            </div>-->
+
+            <div class="curso"
+                 th:each="curso, iterStat : ${cursos}"
+                 th:if="${iterStat.index < 3}">
+                <h3 th:text="${curso.nome}">Nome do Curso</h3>
+                <p th:text="${curso.qtdVagas} + ' Vagas'">xx/xx Vagas</p>
+                <a th:href="@{/cursos/{id}(id=${curso.id})}"><button>Ver mais</button></a>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+</body>
+</html>
