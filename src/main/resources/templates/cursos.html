@@ -13,8 +13,6 @@
 
 <body>
 <main>
-
-    <!-- MATRÍCULA -->
     <section class="matricula-section">
 
         <div class="matricula-container">
@@ -27,8 +25,6 @@
             <div th:if="${#lists.isEmpty(cursos)}" class="sem-cursos">
                 <p>Nenhum curso disponível no momento.</p>
             </div>
-
-            <!-- Listagem dinâmica de cursos vindos do controller -->
             <div th:each="curso : ${cursos}" class="turma-card">
 
                 <div class="turma-info">
@@ -58,7 +54,6 @@
 
                 <form th:action="@{/matriculas}" method="post">
                     <input type="hidden" name="cursoId" th:value="${curso.id}">
-                    <!-- CSRF token injetado automaticamente pelo Spring Security + Thymeleaf -->
                     <button type="submit" class="btn-matricula">
                         Matricular-se
                     </button>

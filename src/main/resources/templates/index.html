@@ -55,23 +55,6 @@
             <div th:if="${#lists.isEmpty(cursos)}" class="sem-cursos">
                 <p>Nenhum curso disponível no momento.</p>
             </div>
-
-            <!--<div class="curso">
-                <h3>Técnico em Informática</h3>
-                <p>xx/xx Vagas</p>
-                <a th:href="@{/cursos/1}"><button>Ver mais</button></a>
-            </div>
-            <div class="curso">
-                <h3>Técnico em Administração</h3>
-                <p>xx/xx Vagas</p>
-                <a th:href="@{/cursos/2}"><button>Ver mais</button></a>
-            </div>
-            <div class="curso">
-                <h3>Desenvolvimento de Sistemas</h3>
-                <p>xx/xx Vagas</p>
-                <a th:href="@{/cursos/3}"><button>Ver mais</button></a>
-            </div>-->
-
             <div class="curso"
                  th:each="curso, iterStat : ${cursos}"
                  th:if="${iterStat.index < 3}">
