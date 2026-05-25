@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(
+          titulo='Cursos',
+          paginaAtual='cursos',
+          conteudo=~{::main},
+          estilos=~{::link},
+          scripts=~{})}">
+
+<head>
+    <link rel="stylesheet" th:href="@{/css/curso.css}">
+</head>
+
+<body>
+<main>
+
+    <!-- MATRÍCULA -->
+    <section class="matricula-section">
+
+        <div class="matricula-container">
+
+            <div class="matricula-title">
+                <h1>Realizar Matrícula</h1>
+                <p>Escolha uma turma disponível para realizar sua matrícula.</p>
+            </div>
+
+            <div th:if="${#lists.isEmpty(cursos)}" class="sem-cursos">
+                <p>Nenhum curso disponível no momento.</p>
+            </div>
+
+            <!-- Listagem dinâmica de cursos vindos do controller -->
+            <div th:each="curso : ${cursos}" class="turma-card">
+
+                <div class="turma-info">
+
+                    <h2 th:text="${curso.nome}">Nome do Curso</h2>
+
+                    <p>
+                        <i class="fa-regular fa-clock"></i>
+                        <span th:text="${#temporals.format(curso.horarioInicio, 'HH:mm')}">00:00</span>
+                        às
+                        <span th:text="${#temporals.format(curso.horarioFim, 'HH:mm')}">00:00</span>
+                    </p>
+
+                    <p>
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <span th:text="${curso.diaInicio.name()} + ' a ' + ${curso.diaFim.name()}">
+                            Dias da semana
+                        </span>
+                    </p>
+
+                    <p>
+                        <i class="fa-solid fa-users"></i>
+                        <span th:text="${curso.qtdVagas} + ' vagas disponíveis'">0 vagas disponíveis</span>
+                    </p>
+
+                </div>
+
+                <form th:action="@{/matriculas}" method="post">
+                    <input type="hidden" name="cursoId" th:value="${curso.id}">
+                    <!-- CSRF token injetado automaticamente pelo Spring Security + Thymeleaf -->
+                    <button type="submit" class="btn-matricula">
+                        Matricular-se
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+</body>
+</html>

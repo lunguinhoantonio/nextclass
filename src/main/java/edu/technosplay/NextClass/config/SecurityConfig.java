@@ -25,7 +25,17 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/api-docs/**",
-            "/h2-console/**"
+            "/h2-console/**",
+            "/",
+            "/cursos",
+            "/cadastro",
+            "/login",
+            "/atendimento",
+            "/atividades",
+            "/css/**",
+            "/js/**",
+            "/imagens/**",
+            "/favicon.ico"
     };
 
     @Bean

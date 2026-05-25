@@ -1,0 +1,151 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding-top: 120px;
+  background-color: #c0c0c085;
+  font-family: "Ubuntu", sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+#nextclass{
+    color: black;
+}
+
+button {
+  border: 0;
+  outline: none;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+#nextclass{
+  width: 150px;
+  margin-top: 20px;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  height: 90px;
+  background-color: #ffffffd7;
+  padding: 20px 40px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  transition: transform 0.5s ease;
+
+  z-index: 1000;
+}
+
+.navbar .logo i {
+  color: #0aa5ff;
+  font-size: 22px;
+}
+
+.navbar .logo a {
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  margin-left: 12px;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.menu-links {
+  display: flex;
+  gap: 24px;
+  border-right: 1px solid #999999;
+  padding-inline: 24px;
+}
+
+.menu-links a {
+  font-weight: 500;
+  color: #000000;
+  padding: 8px 16px;
+  position: relative;
+}
+.menu-links a:hover {
+   color: #f7c600;
+}
+.menu-links a::after {
+   content: ''; /* Conteúdo vazio para criar a linha */
+    position: absolute; /* Posicionamento absoluto em relação ao link */
+    bottom: 0; /* Na parte inferior do link */
+    left: 0; /* Começa na esquerda */
+    width: 0%; /* Largura inicial zero */
+    height: 4px; /* Espessura da linha */
+    background-color: #f7c600a2; /* Cor da linha */
+    transition: width 0.3s ease; /* Transição suave na largura */
+}
+.menu-links a:hover::after,
+.menu-links a.active::after{ /* Adicione a classe 'active' ao link da página atual */
+    width: 100%; /* A linha se expande para 100% ao passar o mouse ou se for a página ativa */
+}
+.log-in {
+  font-weight: 500;
+  padding: 12px 22px;
+  background-color: transparent;
+  color: #000000;
+  border-radius: 10px;
+  border: 2px solid #fffc3d;
+  transition: 0.2s;
+}
+.log-in:hover {
+  background-color: #fffc3d;
+  color: rgb(0, 0, 0);
+}
+
+.menu-btn {
+  font-size: 32px;
+  color: rgb(8, 8, 8);
+  display: none;
+  cursor: pointer;
+}
+
+@media (max-width: 53rem) {
+
+  .menu {
+    display: none;
+    position: absolute;
+    top: 90px;
+    right: 0;
+    background: white;
+    width: 100%;
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .menu.active {
+    display: flex;
+  }
+
+  .menu-links {
+    flex-direction: column;
+    border: none;
+    gap: 15px;
+  }
+
+  .menu-btn {
+    display: block;
+  }
+}

@@ -1,0 +1,275 @@
+.carousel{
+    width: 90%;
+    height: 220px; /* define altura exata */
+    max-width: 1500px;
+    margin: auto;
+    overflow: hidden;
+    display: flex;
+    mask-image: linear-gradient(
+        to right,
+        transparent,
+        black 10%,
+        black 90%,
+        transparent
+    );
+}
+
+.group{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-right: 20px;
+    margin: 50px 0px;
+    flex-shrink: 0;
+    animation: scrolling 10s linear infinite;
+    will-change: transform;
+}
+
+/* PAUSA QUANDO PASSA O MOUSE */
+
+.carousel:hover .group{
+    animation-play-state: paused;
+}
+
+/* CARDS */
+
+.card{
+
+    width: 300px;
+    height: 180px;
+
+    border-radius: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    padding: 20px;
+
+    color: white;
+
+    font-size: 28px;
+    font-weight: bold;
+
+    line-height: 1.2;
+
+    overflow: hidden;
+
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.ver-mais-cursos {
+    text-align: right;
+    margin-top: 12px;
+}
+
+.ver-mais-cursos a {
+    padding: 8px 16px;
+    background-color: #111111;
+    border-radius: 6px;
+    color: #eee;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+.ver-mais-cursos a:hover {
+    text-decoration: underline;
+}
+
+.top-cursos {
+    display: flex;
+    align-items: center;
+    justify-content: space-between
+}
+
+/* CORES DIFERENTES */
+
+.card:nth-child(1){
+    background: #7958ff;
+}
+
+.card:nth-child(2){
+    background: #5d34f2;
+}
+
+.card:nth-child(3){
+    background: #4300da;
+}
+
+.card:nth-child(4){
+    background: #00a8ff;
+}
+
+.card:nth-child(5){
+    background: #00c896;
+}
+
+/* ANIMAÇÃO */
+
+@keyframes scrolling {
+
+    0%{
+        transform: translateX(0);
+    }
+
+    100%{
+        transform: translateX(-100%);
+    }
+}
+
+/*----------------------------------------------------------------------------------------------*/
+
+
+.about-system{
+
+    width: 100%;
+    padding: 50px 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-container{
+
+    width: 100%;
+    max-width: 1200px;
+
+    background: white;
+
+    border-radius: 30px;
+
+    padding: 50px;
+
+    display: flex;
+    align-items: center;
+    gap: 50px;
+
+    box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+}
+
+/* IMAGEM */
+
+.about-image{
+
+    flex: 1;
+}
+
+.about-image img{
+
+    width: 100%;
+    border-radius: 20px;
+
+    object-fit: cover;
+}
+
+/* TEXTO */
+
+.about-text{
+
+    flex: 1;
+}
+
+.about-text h2{
+
+    font-size: 50px;
+    margin-bottom: 20px;
+
+    color: #111;
+}
+
+.about-text p{
+
+    font-size: 18px;
+    line-height: 1.8;
+
+    color: #555;
+
+    margin-bottom: 30px;
+}
+
+.about-text button{
+
+    padding: 15px 35px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #4300da;
+    color: white;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.about-text button:hover{
+
+    transform: translateY(-3px);
+
+    background: #2d0096;
+}
+
+@media(max-width: 900px){
+
+    .about-container{
+
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-text h2{
+
+        font-size: 35px;
+    }
+
+}
+
+section {
+    padding: 3rem 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Lista de cursos */
+  .lista-cursos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .curso {
+    background-color: #fff;
+    padding: 1.5rem;
+    margin: 10px 10px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-align: center;
+  }
+  
+  .curso h3 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .curso button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .curso button:hover {
+    background-color: #333;
+  }
+  
