@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
+      th:fragment="layout(titulo, paginaAtual, conteudo, estilos, scripts)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${titulo} + ' - NextClass'">NextClass</title>
+
+    <link rel="shortcut icon" type="image/png" th:href="@{/imagens/logo-icon.png}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+
+    <th:block th:replace="${estilos} ?: ~{}"></th:block>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">
+        <a th:href="@{/}">
+            <img id="nextclass" th:src="@{/assets/logo-icon-no-bg.png}" alt="Logo NextClass">
+        </a>
+    </div>
+    <div class="menu" id="mobile-menu">
+        <div class="menu-links">
+            <a th:href="@{/}"          th:classappend="${paginaAtual == 'inicio'}     ? 'active'">Início</a>
+            <a th:href="@{/cursos}"    th:classappend="${paginaAtual == 'cursos'}     ? 'active'">Cursos</a>
+            <a th:href="@{/atividades}"th:classappend="${paginaAtual == 'atividades'} ? 'active'">Atividades</a>
+            <a th:href="@{/atendimento}"th:classappend="${paginaAtual == 'atendimento'}? 'active'">Atendimento</a>
+        </div>
+        <a th:href="@{/login}">
+            <button class="log-in">Entrar</button>
+        </a>
+    </div>
+    <div class="menu-btn" id="menu-btn">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+</nav>
+
+<th:block th:replace="${conteudo}"></th:block>
+
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-about">
+            <h2>NextClass</h2>
+            <p>Plataforma desenvolvida para facilitar matrículas, gerenciamento acadêmico e atendimento escolar online.</p>
+        </div>
+        <div class="footer-links">
+            <h3>Navegação</h3>
+            <a th:href="@{/}">Início</a>
+            <a th:href="@{/cursos}">Cursos</a>
+            <a th:href="@{/atividades}">Atividades</a>
+            <a th:href="@{/login}">Login</a>
+        </div>
+        <div class="footer-support">
+            <h3>Atendimento</h3>
+            <p>Precisa de ajuda ou suporte acadêmico?</p>
+            <a th:href="@{/atendimento}">
+                <button>Solicitar Atendimento</button>
+            </a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2026 NextClass - Todos os direitos reservados
+    </div>
+</footer>
+
+<script th:src="@{/js/navbar.js}"></script>
+<th:block th:replace="${scripts} ?: ~{}"></th:block>
+
+</body>
+</html>
