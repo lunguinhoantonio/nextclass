@@ -7,6 +7,8 @@
     width: 100%;
 
     padding: 60px 20px;
+
+    background: #F5F7FB;
 }
 
 .matricula-container{
@@ -28,14 +30,14 @@
 
     font-size: 42px;
 
-    color: #111;
+    color: #111827;
 
     margin-bottom: 10px;
 }
 
 .matricula-title p{
 
-    color: #666;
+    color: #6B7280;
 
     font-size: 17px;
 }
@@ -44,7 +46,9 @@
 
 .turma-card{
 
-    background: white;
+    background: #FFFFFF;
+
+    border: 1px solid #E5E7EB;
 
     border-radius: 20px;
 
@@ -56,16 +60,18 @@
     justify-content: space-between;
     align-items: center;
 
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
 
     transition: 0.3s;
 }
 
 .turma-card:hover{
 
-    transform: translateY(-3px);
+    transform: translateY(-4px);
 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    box-shadow: 0 10px 30px rgba(91, 33, 182, 0.12);
+
+    border-color: #7C3AED;
 }
 
 /* INFORMAÇÕES */
@@ -74,7 +80,7 @@
 
     margin-bottom: 15px;
 
-    color: #111;
+    color: #111827;
 
     font-size: 28px;
 }
@@ -83,14 +89,14 @@
 
     margin: 8px 0;
 
-    color: #555;
+    color: #4B5563;
 
     font-size: 16px;
 }
 
 .turma-info i{
 
-    color: #4300da;
+    color: #7C3AED;
 
     margin-right: 8px;
 }
@@ -105,7 +111,7 @@
 
     border-radius: 12px;
 
-    background: #4300da;
+    background: #5B21B6;
 
     color: white;
 
@@ -119,12 +125,72 @@
 
 .btn-matricula:hover{
 
-    background: #2d0096;
+    background: #7C3AED;
 
     transform: scale(1.03);
 }
 
+/* ========================= */
+/* DARK MODE */
+/* ========================= */
+
+body.dark-mode .matricula-section{
+
+    background: #0F172A;
+}
+
+body.dark-mode .matricula-title h1{
+
+    color: #FFFFFF;
+}
+
+body.dark-mode .matricula-title p{
+
+    color: #CBD5E1;
+}
+
+body.dark-mode .turma-card{
+
+    background: #1E293B;
+
+    border: 1px solid #334155;
+
+    box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+}
+
+body.dark-mode .turma-card:hover{
+
+    border-color: #7C3AED;
+}
+
+body.dark-mode .turma-info h2{
+
+    color: #FFFFFF;
+}
+
+body.dark-mode .turma-info p{
+
+    color: #CBD5E1;
+}
+
+body.dark-mode .turma-info i{
+
+    color: #A855F7;
+}
+
+body.dark-mode .btn-matricula{
+
+    background: #7C3AED;
+}
+
+body.dark-mode .btn-matricula:hover{
+
+    background: #9333EA;
+}
+
+/* ========================= */
 /* RESPONSIVO */
+/* ========================= */
 
 @media(max-width: 768px){
 

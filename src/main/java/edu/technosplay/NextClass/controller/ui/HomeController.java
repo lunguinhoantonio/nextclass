@@ -23,4 +23,9 @@ public class HomeController {
         model.addAttribute("cursos", cursoService.listar(null, true));
         return "cursos";
     }
+
+    @GetMapping("/atendimento")
+    public String paginaAtendimento() {
+        return "atendimento";
+    }
 }

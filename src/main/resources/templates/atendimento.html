@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(
+          titulo='Agendamento de Atendimento',
+          paginaAtual='atendimento',
+          conteudo=~{::main},
+          estilos=~{::link},
+          scripts=~{::script})}">
+
+<head>
+    <link rel="stylesheet" th:href="@{/css/atendimento.css}">
+</head>
+
+<body>
+<main>
+
+    <section class="about-system">
+        <div class="about-container">
+
+            <div class="about-image">
+                <img th:src="@{/assets/atendimento-icon.png}" class="logo-dark" alt="Atendimento NextClass">
+                <img th:src="@{/assets/atendimento-icon-white.png}" class="logo-white" alt="Atendimento NextClass">
+            </div>
+
+            <div class="about-text">
+                <h2>Agendamento de Atendimento</h2>
+                <p>
+                    Solicite atendimentos acadêmicos de forma simples e rápida, acompanhando
+                    horários, confirmações e mensagens diretamente pela plataforma.
+                </p>
+                <button id="abrirModal">Agendar Atendimento</button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- MODAL -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+
+            <span class="fechar" id="fecharModal">&times;</span>
+            <div class="etapa active" id="etapa1">
+
+                <h2>Agendar Atendimento</h2>
+
+                <label for="tipo">Tipo de atendimento</label>
+                <select id="tipo" name="tipo">
+                    <option value="SUPORTE">Suporte Técnico</option>
+                    <option value="ACADEMICO">Acadêmico</option>
+                    <option value="FINANCEIRO">Financeiro</option>
+                    <option value="OUTRO">Outro</option>
+                </select>
+
+                <label for="data">Data</label>
+                <input type="date" id="data" name="data">
+
+                <label for="hora">Horário</label>
+                <input type="time" id="hora" name="hora" min="08:00" max="19:00">
+
+                <label for="assunto">Assunto</label>
+                <input type="text" id="assunto" name="assunto"
+                       placeholder="Resumo do motivo do atendimento" maxlength="200">
+
+                <label for="descricao">Descrição</label>
+                <textarea id="descricao" name="descricao"
+                          placeholder="Descreva detalhadamente sua solicitação"
+                          maxlength="2000" rows="4"></textarea>
+
+                <button id="proxima" type="button">Continuar</button>
+
+            </div>
+            <div class="etapa" id="etapa2">
+
+                <h2>Seus Dados</h2>
+
+                <input type="hidden" id="tipoHidden">
+                <input type="hidden" id="dataHidden">
+                <input type="hidden" id="horaHidden">
+                <input type="hidden" id="assuntoHidden">
+                <input type="hidden" id="descricaoHidden">
+
+                <label for="nomeCompleto">Nome completo</label>
+                <input type="text" id="nomeCompleto" name="nomeCompleto"
+                       placeholder="Nome completo" maxlength="100">
+
+                <label for="cpf">CPF</label>
+                <input type="text" id="cpf" name="cpf"
+                       placeholder="Somente números (11 dígitos)" maxlength="11">
+
+                <label for="dataNascimento">Data de Nascimento</label>
+                <input type="date" id="dataNascimento" name="dataNascimento">
+
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" placeholder="seu@email.com">
+
+                <label for="telefone">Telefone</label>
+                <input type="tel" id="telefone" name="telefone"
+                       placeholder="Somente números (11 dígitos)" maxlength="11">
+
+                <div id="mensagemRetorno" style="display:none; margin-top:10px;"></div>
+
+                <div class="etapa2-botoes">
+                    <button id="voltar" type="button">&#8592; Voltar</button>
+                    <button id="enviarAgendamento" type="button">Enviar Agendamento</button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</main>
+
+<script th:src="@{/js/atendimento.js}"></script>
+</body>
+</html>

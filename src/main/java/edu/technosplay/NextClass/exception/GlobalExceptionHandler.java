@@ -18,6 +18,19 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    private static final Map<String, String> CAMPO_LEGIVEL = Map.ofEntries(
+            Map.entry("nomeCompleto", "Nome completo"),
+            Map.entry("cpf", "CPF"),
+            Map.entry("dataNascimento", "Data de nascimento"),
+            Map.entry("email", "E-mail"),
+            Map.entry("telefone", "Telefone"),
+            Map.entry("tipo", "Tipo de atendimento"),
+            Map.entry("dataAgendamento", "Data de agendamento"),
+            Map.entry("assunto", "Assunto"),
+            Map.entry("descricao", "Descrição"),
+            Map.entry("atendenteId", "Atendente")
+    );
+
     @ExceptionHandler(RecursoNaoEncontradoException.class)
     public ResponseEntity<Map<String, Object>> handleNaoEncontrado(RecursoNaoEncontradoException ex) {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
@@ -36,7 +49,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidacao(MethodArgumentNotValidException ex) {
         List<String> erros = ex.getBindingResult().getFieldErrors().stream()
-                .map(f -> f.getField() + ": " + f.getDefaultMessage())
+                .map(f -> {
+                    String campoLegivel = CAMPO_LEGIVEL.getOrDefault(f.getField(), "Campo inválido");
+                    return campoLegivel + ": " + f.getDefaultMessage();
+                })
                 .toList();
 
         Map<String, Object> body = new LinkedHashMap<>();
