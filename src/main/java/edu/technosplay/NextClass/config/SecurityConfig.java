@@ -34,7 +34,7 @@ public class SecurityConfig {
             "/atividades",
             "/css/**",
             "/js/**",
-            "/imagens/**",
+            "/assets/**",
             "/favicon.ico"
     };
 
@@ -42,7 +42,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .headers(headers -> headers.frameOptions(frame -> frame.disable())) // H2 console
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         //.requestMatchers(HttpMethod.GET, "/nextclass/cursos/**").authenticated()
