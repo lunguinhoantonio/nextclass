@@ -1,24 +1,81 @@
 @import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap");
 
+/* ========================= */
+/* RESET */
+/* ========================= */
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    border-color 0.3s;
 }
+
+/* ========================= */
+/* CORES GLOBAIS */
+/* ========================= */
+
+:root{
+
+  --bg: #F5F7FB;
+  --text: #111111;
+
+  --navbar: #141414;
+
+  --card: #FFFFFF;
+
+  --primary: #5B21B6;
+  --primary-hover: #7C3AED;
+
+  --secondary: #555555;
+
+  --shadow: rgba(0,0,0,0.12);
+
+  --white: #FFFFFF;
+}
+
+/* ========================= */
+/* DARK MODE */
+/* ========================= */
+
+.dark-mode{
+
+  --bg: #0F172A;
+
+  --text: #F8FAFC;
+
+  --navbar: #020617;
+
+  --card: #1E293B;
+
+  --primary: #8B5CF6;
+
+  --primary-hover: #A855F7;
+
+  --secondary: #CBD5E1;
+
+  --shadow: rgba(0,0,0,0.4);
+
+  --white: #FFFFFF;
+}
+
+/* ========================= */
+/* BODY */
+/* ========================= */
 
 body {
   margin: 0;
   padding-top: 120px;
-  background-color: #c0c0c085;
+  background-color: var(--bg);
+  color: var(--text);
   font-family: "Ubuntu", sans-serif;
 }
 
 a {
   text-decoration: none;
-}
-
-#nextclass{
-    color: black;
 }
 
 button {
@@ -29,19 +86,33 @@ button {
   cursor: pointer;
 }
 
+/* ========================= */
+/* LOGO */
+/* ========================= */
+
 #nextclass{
   width: 150px;
   margin-top: 20px;
+  filter: invert(100%);
 }
 
+/* ========================= */
+/* NAVBAR */
+/* ========================= */
+
 .navbar {
+
   position: fixed;
+
   top: 0;
   left: 0;
+
   width: 100%;
 
   height: 90px;
-  background-color: #ffffffd7;
+
+  background-color: var(--navbar);
+
   padding: 20px 40px;
 
   display: flex;
@@ -51,101 +122,182 @@ button {
   transition: transform 0.5s ease;
 
   z-index: 1000;
+
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
 }
 
-.navbar .logo i {
-  color: #0aa5ff;
-  font-size: 22px;
-}
-
-.navbar .logo a {
-  font-size: 24px;
-  font-weight: 700;
-  color: white;
-  margin-left: 12px;
-}
+/* ========================= */
+/* MENU */
+/* ========================= */
 
 .menu {
+
   display: flex;
   align-items: center;
   gap: 32px;
 }
 
 .menu-links {
+
   display: flex;
   gap: 24px;
-  border-right: 1px solid #999999;
+
+  border-right: 1px solid var(--primary);
+
   padding-inline: 24px;
 }
 
+/* LINKS */
+
 .menu-links a {
+
   font-weight: 500;
-  color: #000000;
+
+  color: var(--white);
+
   padding: 8px 16px;
+
   position: relative;
 }
+
 .menu-links a:hover {
-   color: #f7c600;
-}
-.menu-links a::after {
-   content: ''; /* Conteúdo vazio para criar a linha */
-    position: absolute; /* Posicionamento absoluto em relação ao link */
-    bottom: 0; /* Na parte inferior do link */
-    left: 0; /* Começa na esquerda */
-    width: 0%; /* Largura inicial zero */
-    height: 4px; /* Espessura da linha */
-    background-color: #f7c600a2; /* Cor da linha */
-    transition: width 0.3s ease; /* Transição suave na largura */
-}
-.menu-links a:hover::after,
-.menu-links a.active::after{ /* Adicione a classe 'active' ao link da página atual */
-    width: 100%; /* A linha se expande para 100% ao passar o mouse ou se for a página ativa */
-}
-.log-in {
-  font-weight: 500;
-  padding: 12px 22px;
-  background-color: transparent;
-  color: #000000;
-  border-radius: 10px;
-  border: 2px solid #fffc3d;
-  transition: 0.2s;
-}
-.log-in:hover {
-  background-color: #fffc3d;
-  color: rgb(0, 0, 0);
+
+  color: var(--primary-hover);
 }
 
+/* LINHA ANIMADA */
+
+.menu-links a::after {
+
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 0%;
+  height: 4px;
+
+  background-color: var(--primary-hover);
+
+  transition: width 0.3s ease;
+}
+
+.menu-links a:hover::after,
+.menu-links a.active::after {
+
+  width: 100%;
+}
+
+/* ========================= */
+/* BOTÃO LOGIN */
+/* ========================= */
+
+.log-in {
+
+  font-weight: 500;
+
+  padding: 12px 22px;
+
+  background-color: transparent;
+
+  color: var(--white);
+
+  border-radius: 10px;
+
+  border: 2px solid var(--primary);
+
+  transition: 0.3s;
+}
+
+.log-in:hover {
+
+  background-color: var(--primary);
+
+  color: white;
+
+  transform: translateY(-2px);
+}
+
+/* ========================= */
+/* BOTÃO TEMA */
+/* ========================= */
+
+#theme-toggle {
+
+  background: transparent;
+
+  color: white;
+
+  font-size: 22px;
+
+  margin-left: 15px;
+  transition: 0.2s;
+}
+
+#theme-toggle:hover {
+
+  color: var(--primary-hover);
+
+  transform: rotate(15deg);
+}
+
+/* ========================= */
+/* MENU MOBILE */
+/* ========================= */
+
 .menu-btn {
+
   font-size: 32px;
-  color: rgb(8, 8, 8);
+
+  color: white;
+
   display: none;
+
   cursor: pointer;
 }
+
+/* ========================= */
+/* RESPONSIVO */
+/* ========================= */
 
 @media (max-width: 53rem) {
 
   .menu {
+
     display: none;
+
     position: absolute;
+
     top: 90px;
     right: 0;
-    background: white;
+
+    background: var(--navbar);
+
     width: 100%;
+
     flex-direction: column;
+
     padding: 20px;
   }
 
   .menu.active {
+
     display: flex;
   }
 
   .menu-links {
+
     flex-direction: column;
+
     border: none;
+
     gap: 15px;
   }
 
   .menu-btn {
+
     display: block;
   }
 }
