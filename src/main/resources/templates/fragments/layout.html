@@ -7,10 +7,11 @@
 
     <title th:text="${titulo} + ' - NextClass'">NextClass</title>
 
-    <link rel="shortcut icon" type="image/png" th:href="@{/imagens/logo-icon.png}">
+    <link rel="shortcut icon" type="image/png" th:href="@{/assets/logo-icon.png}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <link rel="stylesheet" th:href="@{/css/navbar.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
 
     <th:block th:replace="${estilos} ?: ~{}"></th:block>
 </head>
@@ -24,8 +25,8 @@
     </div>
     <div class="menu" id="mobile-menu">
         <div class="menu-links">
-            <a th:href="@{/}" th:classappend="${paginaAtual == 'inicio'}     ? 'active'">Início</a>
-            <a th:href="@{/cursos}" th:classappend="${paginaAtual == 'cursos'}     ? 'active'">Cursos</a>
+            <a th:href="@{/}" th:classappend="${paginaAtual == 'inicio'} ? 'active'">Início</a>
+            <a th:href="@{/cursos}" th:classappend="${paginaAtual == 'cursos'} ? 'active'">Cursos</a>
             <a th:href="@{/atividades}" th:classappend="${paginaAtual == 'atividades'} ? 'active'">Atividades</a>
             <a th:href="@{/atendimento}" th:classappend="${paginaAtual == 'atendimento'}? 'active'">Atendimento</a>
         </div>
@@ -33,6 +34,9 @@
             <button class="log-in">Entrar</button>
         </a>
     </div>
+    <button id="theme-toggle">
+        <i class="fa-solid fa-moon"></i>
+    </button>
     <div class="menu-btn" id="menu-btn">
         <i class="fa-solid fa-bars"></i>
     </div>
@@ -67,6 +71,7 @@
 </footer>
 
 <script th:src="@{/js/navbar.js}"></script>
+<script th:src="@{/js/darkmode.js}"></script>
 <th:block th:replace="${scripts} ?: ~{}"></th:block>
 
 </body>
