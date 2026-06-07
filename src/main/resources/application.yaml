@@ -15,3 +15,7 @@ spring:
     console:
       enabled: true
       path: /h2-console
+
+nextclass:
+  security:
+    secret: "2Gapq5r7J35hMtRqELHMQqURrSH7nQs80Lzj10DhnfU"
