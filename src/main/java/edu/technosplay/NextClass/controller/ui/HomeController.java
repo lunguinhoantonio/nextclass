@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,5 +28,19 @@ public class HomeController {
     @GetMapping("/atendimento")
     public String paginaAtendimento() {
         return "atendimento";
+    }
+
+    @GetMapping("/login")
+    public String paginaLogin(@RequestParam(value = "erro", required = false) String erro,
+                              @RequestParam(value = "logout", required = false) String logout,
+                              Model model) {
+        if (erro != null) model.addAttribute("erro", "E-mail ou senha inválidos.");
+        if (logout != null) model.addAttribute("msg", "Logout realizado com sucesso.");
+        return "login";
+    }
+
+    @GetMapping("/cadastro")
+    public String paginaCadastro() {
+        return "cadastro";
     }
 }
