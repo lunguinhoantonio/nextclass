@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -28,8 +30,21 @@ public class GlobalExceptionHandler {
             Map.entry("dataAgendamento", "Data de agendamento"),
             Map.entry("assunto", "Assunto"),
             Map.entry("descricao", "Descrição"),
-            Map.entry("atendenteId", "Atendente")
+            Map.entry("atendenteId", "Atendente"),
+            Map.entry("cursoId", "Curso"),
+            Map.entry("turmaId", "Turma"),
+            Map.entry("codigo", "Código da turma")
     );
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Map<String, Object>> handleNaoAutenticado(AuthenticationException ex) {
+        return buildResponse(HttpStatus.UNAUTHORIZED, "Não autenticado: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAcessoNegado(AccessDeniedException ex) {
+        return buildResponse(HttpStatus.FORBIDDEN, "Acesso negado. Você não tem permissão para realizar esta ação.");
+    }
 
     @ExceptionHandler(RecursoNaoEncontradoException.class)
     public ResponseEntity<Map<String, Object>> handleNaoEncontrado(RecursoNaoEncontradoException ex) {
