@@ -21,6 +21,7 @@ public record AtendimentoRequest(
 
         @NotBlank(message = "Nome completo é obrigatório")
         @Size(max = 100, message = "Nome deve ter no máximo 100 caracteres")
+        @Pattern(regexp = "^[a-zA-ZÀ-ÿ\\s]+$", message = "O campo deve conter apenas letras.")
         @Schema(description = "Nome completo do solicitante", example = "João da Silva")
         String nomeCompleto,
 
