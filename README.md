@@ -1,6 +1,6 @@
 # NextClass
 
-API RESTful para gestão de usuários em uma plataforma educacional, desenvolvida com Spring Boot. O sistema suporta três perfis de usuário — aluno, professor e coordenador — e está preparado para a integração futura de autenticação JWT, matrículas e atendimentos.
+API RESTful para gestão de uma plataforma educacional, desenvolvida com Spring Boot. O sistema contempla autenticação JWT, controle de acesso por perfil, gerenciamento de usuários, cursos, turmas, matrículas e atendimentos.
 
 ---
 
@@ -8,11 +8,11 @@ API RESTful para gestão de usuários em uma plataforma educacional, desenvolvid
 
 - **Java 21**
 - **Spring Boot 3.5**
-  - Spring Web
-  - Spring Data JPA
-  - Spring Security
-  - Spring Validation
-  - Thymeleaf
+    - Spring Web
+    - Spring Data JPA
+    - Spring Security + JWT
+    - Spring Validation
+    - Thymeleaf
 - **H2 Database** (em memória, para desenvolvimento)
 - **Lombok**
 - **Springdoc OpenAPI / Swagger UI**
@@ -30,11 +30,9 @@ API RESTful para gestão de usuários em uma plataforma educacional, desenvolvid
 ## Como executar
 
 ```bash
-# Clone o repositório
-git clone https://github.com/seu-usuario/NextClass.git
-cd NextClass
+git clone https://github.com/lunguinhoantonio/nextclass.git
+cd nextclass
 
-# Execute com o Maven Wrapper
 ./mvnw spring-boot:run
 ```
 
@@ -44,8 +42,6 @@ A aplicação estará disponível em `http://localhost:8080`.
 
 ## Documentação da API
 
-O Swagger UI está disponível após a inicialização:
-
 ```
 http://localhost:8080/swagger-ui.html
 ```
@@ -54,17 +50,15 @@ http://localhost:8080/swagger-ui.html
 
 ## Banco de dados (H2 Console)
 
-O console do banco de dados em memória pode ser acessado em:
-
 ```
 http://localhost:8080/h2-console
 ```
 
-| Campo | Valor |
-|---|---|
+| Campo    | Valor                  |
+|----------|------------------------|
 | JDBC URL | `jdbc:h2:mem:nextclass` |
-| Usuário | `sa` |
-| Senha | *(vazio)* |
+| Usuário  | `sa`                   |
+| Senha    | *(vazio)*              |
 
 ---
 
@@ -74,20 +68,47 @@ http://localhost:8080/h2-console
 src/
 └── main/
     ├── java/edu/technosplay/NextClass/
-    │   ├── config/          # Configurações de segurança (SecurityConfig)
-    │   ├── controller/      # Controllers REST (Auth, Usuario)
+    │   ├── config/          # SecurityConfig, filtros JWT
+    │   ├── controller/      # Controllers REST e UI (Thymeleaf)
     │   ├── dto/
-    │   │   ├── request/     # DTOs de entrada (UsuarioRequest)
-    │   │   └── response/    # DTOs de saída (UsuarioResponse, PageResponse)
-    │   ├── exception/       # Exceções de negócio personalizadas
-    │   ├── mapper/          # Mapeamento entre entidades e DTOs
+    │   │   ├── request/     # DTOs de entrada
+    │   │   └── response/    # DTOs de saída
+    │   ├── exception/       # GlobalExceptionHandler, exceções customizadas
+    │   ├── mapper/          # Mapeamento entidade ↔ DTO
     │   ├── model/           # Entidades JPA
-    │   │   └── enums/       # Role (ALUNO, PROFESSOR, COORDENADOR)
-    │   ├── repository/      # Repositórios Spring Data
+    │   │   └── enums/       # Role, StatusAtendimento, TipoAtendimento, StatusMatricula, DiaSemana
+    │   ├── repository/      # Repositórios Spring Data JPA
     │   └── service/         # Interfaces e implementações de serviço
     └── resources/
+        ├── static/          # CSS, JS, imagens
+        ├── templates/       # Páginas Thymeleaf
         └── application.yaml
 ```
+
+---
+
+## Autenticação
+
+A API usa **JWT Bearer Token**. Para acessar endpoints protegidos:
+
+1. Registre um usuário via `POST /nextclass/auth/registrar`
+2. Faça login via `POST /nextclass/auth/login` e copie o `token` da resposta
+3. Envie o token no header de todas as requisições:
+
+```
+Authorization: Bearer <token>
+```
+
+---
+
+## Perfis de usuário (Roles)
+
+| Role          | Descrição                              |
+|---------------|----------------------------------------|
+| `ALUNO`       | Pode se matricular em turmas e abrir atendimentos |
+| `PROFESSOR`   | Docente vinculado a cursos             |
+| `ATENDENTE`   | Realiza e gerencia atendimentos        |
+| `COORDENADOR` | Acesso administrativo completo         |
 
 ---
 
@@ -95,47 +116,145 @@ src/
 
 ### Autenticação — `/nextclass/auth`
 
-| Método | Rota | Descrição |
-|---|---|---|
-| `POST` | `/nextclass/auth/registrar` | Cadastra um novo usuário |
+| Método | Rota                        | Autenticação | Descrição                  |
+|--------|-----------------------------|--------------|----------------------------|
+| `POST` | `/nextclass/auth/registrar` | Pública      | Cadastra um novo usuário   |
+| `POST` | `/nextclass/auth/login`     | Pública      | Retorna o JWT de acesso    |
+| `POST` | `/nextclass/auth/logout`    | JWT          | Invalida a sessão          |
+
+---
 
 ### Usuários — `/nextclass/usuarios`
 
-| Método | Rota | Descrição |
-|---|---|---|
-| `GET` | `/nextclass/usuarios` | Lista usuários (filtros opcionais: `role`, `ativo`) |
-| `GET` | `/nextclass/usuarios/{id}` | Busca usuário por ID |
-| `PATCH` | `/nextclass/usuarios/{id}/ativar` | Ativa a conta de um usuário |
-| `PATCH` | `/nextclass/usuarios/{id}/desativar` | Desativa a conta de um usuário |
+| Método  | Rota                              | Role mínima    | Descrição                                         |
+|---------|-----------------------------------|----------------|---------------------------------------------------|
+| `GET`   | `/nextclass/usuarios`             | `COORDENADOR`  | Lista usuários (filtros: `role`, `ativo`)         |
+| `GET`   | `/nextclass/usuarios/{id}`        | Autenticado    | Busca usuário por ID                              |
+| `PATCH` | `/nextclass/usuarios/{id}/ativar` | `COORDENADOR`  | Ativa a conta de um usuário                       |
+| `PATCH` | `/nextclass/usuarios/{id}/desativar` | `COORDENADOR` | Desativa a conta de um usuário                  |
+
+**Query params — listar:**
+
+| Parâmetro | Tipo    | Exemplo      | Descrição                              |
+|-----------|---------|--------------|----------------------------------------|
+| `role`    | String  | `ALUNO`      | Filtra por perfil                      |
+| `ativo`   | Boolean | `true`       | Filtra por status ativo/inativo        |
 
 ---
 
-## Perfis de usuário (Roles)
+### Cursos — `/nextclass/cursos`
 
-| Role | Descrição |
-|---|---|
-| `ALUNO` | Estudante da plataforma |
-| `PROFESSOR` | Docente |
-| `COORDENADOR` | Administrador / coordenação |
+| Método   | Rota                               | Role mínima    | Descrição                                       |
+|----------|------------------------------------|----------------|-------------------------------------------------|
+| `POST`   | `/nextclass/cursos`                | `COORDENADOR`  | Cria um novo curso                              |
+| `GET`    | `/nextclass/cursos`                | Autenticado    | Lista cursos (filtros: `professorId`, `ativo`)  |
+| `GET`    | `/nextclass/cursos/{id}`           | Autenticado    | Busca curso por ID                              |
+| `PUT`    | `/nextclass/cursos/{id}`           | `COORDENADOR`  | Atualiza curso completamente                    |
+| `PATCH`  | `/nextclass/cursos/{id}`           | `COORDENADOR`  | Atualiza campos específicos do curso            |
+| `PATCH`  | `/nextclass/cursos/{id}/ativar`    | `COORDENADOR`  | Ativa o curso                                   |
+| `PATCH`  | `/nextclass/cursos/{id}/desativar` | `COORDENADOR`  | Desativa o curso                                |
+
+**Query params — listar:**
+
+| Parâmetro    | Tipo    | Exemplo | Descrição                    |
+|--------------|---------|---------|------------------------------|
+| `professorId`| Long    | `1`     | Filtra por professor         |
+| `ativo`      | Boolean | `true`  | Filtra por status ativo/inativo |
 
 ---
 
-## Exemplo de requisição — Cadastro de usuário
+### Turmas — `/nextclass/turmas`
 
-**`POST /nextclass/auth/registrar`**
+| Método  | Rota                               | Role mínima    | Descrição                                      |
+|---------|------------------------------------|----------------|------------------------------------------------|
+| `POST`  | `/nextclass/turmas`                | `COORDENADOR`  | Cria uma nova turma vinculada a um curso       |
+| `GET`   | `/nextclass/turmas`                | Autenticado    | Lista turmas (filtros: `cursoId`, `ativa`)     |
+| `GET`   | `/nextclass/turmas/{id}`           | Autenticado    | Busca turma por ID                             |
+| `PATCH` | `/nextclass/turmas/{id}/ativar`    | `COORDENADOR`  | Ativa a turma                                  |
+| `PATCH` | `/nextclass/turmas/{id}/desativar` | `COORDENADOR`  | Desativa a turma                               |
 
-```json
+**Query params — listar:**
+
+| Parâmetro | Tipo    | Exemplo | Descrição                      |
+|-----------|---------|---------|--------------------------------|
+| `cursoId` | Long    | `1`     | Filtra por curso               |
+| `ativa`   | Boolean | `true`  | Filtra por status ativa/inativa |
+
+**Regras de negócio:**
+- Não é possível criar turma para um curso inativo
+- A resposta inclui `vagasTotais`, `vagasOcupadas` e `vagasDisponiveis`
+
+---
+
+### Matrículas — `/nextclass/matriculas`
+
+| Método   | Rota                                  | Role mínima              | Descrição                                    |
+|----------|---------------------------------------|--------------------------|----------------------------------------------|
+| `POST`   | `/nextclass/matriculas`               | `ALUNO`                  | Matricula o aluno autenticado em uma turma   |
+| `GET`    | `/nextclass/matriculas/minhas`        | `ALUNO`                  | Lista as matrículas do aluno autenticado     |
+| `GET`    | `/nextclass/matriculas/{id}`          | `ALUNO`, `COORDENADOR`, `ATENDENTE` | Busca matrícula por ID            |
+| `GET`    | `/nextclass/matriculas/aluno/{id}`    | `COORDENADOR`, `ATENDENTE` | Lista matrículas de um aluno específico    |
+| `DELETE` | `/nextclass/matriculas/{id}`          | `ALUNO`, `COORDENADOR`   | Cancela uma matrícula ativa                  |
+
+**Regras de negócio:**
+- O aluno só pode estar matriculado em **1 turma ativa** por vez
+- O aluno não pode cursar mais de **2 cursos distintos** simultaneamente
+- Não é possível se matricular em turma inativa ou sem vagas
+- O aluno só pode cancelar a própria matrícula; o `COORDENADOR` pode cancelar qualquer uma
+
+---
+
+### Atendimentos — `/nextclass/atendimentos`
+
+| Método  | Rota                                                  | Autenticação    | Descrição                                        |
+|---------|-------------------------------------------------------|-----------------|--------------------------------------------------|
+| `POST`  | `/nextclass/atendimentos/publico`                     | Pública         | Abre atendimento sem conta cadastrada            |
+| `POST`  | `/nextclass/atendimentos/solicitante/{solicitanteId}` | JWT             | Abre atendimento vinculado a um usuário          |
+| `GET`   | `/nextclass/atendimentos`                             | JWT             | Lista todos (filtros: `tipo`, `status`)          |
+| `GET`   | `/nextclass/atendimentos/{id}`                        | JWT             | Busca atendimento por ID                         |
+| `GET`   | `/nextclass/atendimentos/solicitante/{id}`            | JWT             | Lista atendimentos de um solicitante (filtro: `status`) |
+| `GET`   | `/nextclass/atendimentos/atendente/{id}`              | JWT             | Lista atendimentos de um atendente (filtro: `status`)   |
+| `GET`   | `/nextclass/atendimentos/sem-atendente`               | JWT             | Lista atendimentos sem atendente atribuído       |
+| `PATCH` | `/nextclass/atendimentos/{id}/atribuir-atendente/{atendenteId}` | JWT | Atribui um atendente ao atendimento       |
+| `PATCH` | `/nextclass/atendimentos/{id}/status`                 | JWT             | Atualiza o status do atendimento                 |
+
+**Valores de `tipo`:** `SUPORTE` · `ACADEMICO` · `FINANCEIRO` · `OUTRO`
+
+**Valores de `status`:** `AGENDADO` · `CONFIRMADO` · `REALIZADO` · `CANCELADO`
+
+---
+
+## Exemplos de requisição
+
+### Login
+
+```http
+POST /nextclass/auth/login
+Content-Type: application/json
+
 {
-  "nome": "Maria Silva",
-  "cpf": "12345678901",
-  "email": "maria@email.com",
-  "senha": "senha123",
-  "telefone": "71999990000",
-  "dataNascimento": "15/06/1998",
+  "email": "joao@email.com",
+  "senha": "minhasenha123"
+}
+```
+
+### Registrar usuário
+
+```http
+POST /nextclass/auth/registrar
+Content-Type: application/json
+
+{
+  "nome": "João da Silva",
+  "cpf": "12345678909",
+  "email": "joao@email.com",
+  "senha": "minhasenha123",
+  "telefone": "71987654321",
+  "dataNascimento": "15/03/2000",
   "logradouro": "Rua das Flores",
-  "numero": "42",
-  "complemento": "Apto 3",
-  "bairro": "Centro",
+  "numero": "123",
+  "complemento": "Apto 45",
+  "bairro": "Brotas",
   "cidade": "Salvador",
   "estado": "BA",
   "cep": "40000000",
@@ -143,19 +262,22 @@ src/
 }
 ```
 
----
+### Matricular aluno em uma turma
 
-## Observações sobre segurança
+```http
+POST /nextclass/matriculas
+Authorization: Bearer <token>
+Content-Type: application/json
 
-A autenticação via **JWT** está preparada na estrutura do projeto (dependências comentadas no `pom.xml` e filtros no `SecurityConfig`), mas ainda não está ativa. Atualmente todos os endpoints do prefixo `/nextclass/**` são públicos. O controle por roles com `@PreAuthorize` também está comentado nos controllers, pronto para ser habilitado quando a autenticação JWT for implementada.
+{
+  "turmaId": 1
+}
+```
 
 ---
 
 ## Roadmap
 
-- [ ] Implementar autenticação JWT
-- [ ] Adicionar entidade `Curso` e gerenciamento de turmas
-- [ ] Implementar `Matricula` (relacionamento Aluno ↔ Curso)
-- [ ] Implementar `Atendimento`
 - [ ] Migrar banco de dados para PostgreSQL em produção
 - [ ] Adicionar testes de integração
+- [ ] Implementar refresh token
