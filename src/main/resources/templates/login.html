@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - NextClass</title>
+    <link rel="shortcut icon" type="image/png" th:href="@{/assets/logo-icon.png}">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body>
+<div class="container">
+
+    <div class="form-image">
+        <img th:src="@{/assets/chapeu.png}" alt="NextClass">
+    </div>
+
+    <div class="form">
+        <div class="form-header">
+            <div class="title">
+                <h1>Entrar na conta</h1>
+            </div>
+            <div class="login-button">
+                <button type="button"><a th:href="@{/cadastro}">Cadastrar</a></button>
+            </div>
+        </div>
+
+        <!-- Feedback -->
+        <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
+        <div th:if="${msg}"  class="alert alert-success" th:text="${msg}"></div>
+        <div id="js-erro" class="alert alert-danger" style="display:none;"></div>
+
+        <div class="input-group">
+            <div class="input-box">
+                <label for="email">E-mail</label>
+                <input id="email" type="email" placeholder="Digite seu e-mail" autocomplete="email" required>
+            </div>
+            <div class="input-box">
+                <label for="senha">Senha</label>
+                <input id="senha" type="password" placeholder="Digite sua senha" autocomplete="current-password" required>
+                <span class="toggle-senha" onclick="toggleSenha()">
+                    <i class="fa-regular fa-eye" id="olho"></i>
+                </span>
+            </div>
+        </div>
+
+        <div class="continue-button">
+            <button id="btn-login" onclick="efetuarLogin()">
+                <span class="spinner" id="spinner"></span>
+                <span id="btn-texto">Entrar</span>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script th:inline="javascript">
+    function toggleSenha() {
+        const input = document.getElementById('senha');
+        const olho = document.getElementById('olho');
+        if (input.type === 'password') {
+            input.type = 'text';
+            olho.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            input.type = 'password';
+            olho.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    }
+
+    function mostrarErro(msg) {
+        const el = document.getElementById('js-erro');
+        el.textContent = msg;
+        el.style.display = 'block';
+    }
+
+    async function efetuarLogin() {
+        const email = document.getElementById('email').value.trim();
+        const senha = document.getElementById('senha').value;
+        const btn = document.getElementById('btn-login');
+        const spinner = document.getElementById('spinner');
+        const texto = document.getElementById('btn-texto');
+
+        document.getElementById('js-erro').style.display = 'none';
+
+        if (!email || !senha) {
+            mostrarErro('Preencha e-mail e senha.');
+            return;
+        }
+
+        btn.classList.add('loading');
+        spinner.style.display = 'inline-block';
+        texto.textContent = 'Entrando...';
+
+        try {
+            const res = await fetch('/nextclass/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, senha }),
+                credentials: 'same-origin'
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                const role = data.role;
+                if (role === 'COORDENADOR') window.location.href = '/nextclass/usuarios';
+                else if (role === 'ATENDENTE') window.location.href = '/atendimento';
+                else window.location.href = '/';
+            } else {
+                const err = await res.json().catch(() => ({}));
+                mostrarErro(err.message || 'E-mail ou senha inválidos.');
+            }
+        } catch (e) {
+            mostrarErro('Erro de conexão. Tente novamente.');
+        } finally {
+            btn.classList.remove('loading');
+            spinner.style.display = 'none';
+            texto.textContent = 'Entrar';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        ['email', 'senha'].forEach(id =>
+            document.getElementById(id).addEventListener('keydown', e => {
+                if (e.key === 'Enter') efetuarLogin();
+            })
+        );
+    });
+</script>
+</body>
+</html>

@@ -31,15 +31,27 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UsuarioResponse> listar(Role role, Boolean ativo) {
-        return usuarioRepository.findAll().stream()
-                .filter(u -> role == null || u.getRole() == role)
-                .filter(u -> ativo == null || u.isAtivo() == ativo)
+        List<Usuario> usuarios;
+
+        if (role != null && ativo != null) {
+            usuarios = usuarioRepository.findAllByRoleAndAtivo(role, ativo);
+        } else if (role != null) {
+            usuarios = usuarioRepository.findAllByRole(role);
+        } else if (ativo != null) {
+            usuarios = usuarioRepository.findAllByAtivo(ativo);
+        } else {
+            usuarios = usuarioRepository.findAll();
+        }
+
+        return usuarios.stream()
                 .map(UsuarioMapper::toResponse)
                 .toList();
     }
 
     @Override
+    @Transactional
     public UsuarioResponse ativar(Long id) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado: " + id));
@@ -48,21 +60,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
+    @Transactional
     public UsuarioResponse desativar(Long id) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado: " + id));
         usuario.setAtivo(false);
         return UsuarioMapper.toResponse(usuarioRepository.save(usuario));
     }
-
-    /*
-    private String limparCpf(String cpf) {
-        return cpf.replaceAll("[.\\-]", "");
-    }
-
-    private String formatarCpf(String cpf) {
-        if (cpf == null || cpf.length() != 11) return cpf;
-        return cpf.substring(0, 3) + "." + cpf.substring(3, 6) + "." +
-                cpf.substring(6, 9) + "-" + cpf.substring(9);
-    }*/
 }

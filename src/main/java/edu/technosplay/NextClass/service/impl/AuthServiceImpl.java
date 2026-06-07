@@ -1,6 +1,9 @@
 package edu.technosplay.NextClass.service.impl;
 
+import edu.technosplay.NextClass.config.JwtService;
+import edu.technosplay.NextClass.dto.request.LoginRequest;
 import edu.technosplay.NextClass.dto.request.UsuarioRequest;
+import edu.technosplay.NextClass.dto.response.LoginResponse;
 import edu.technosplay.NextClass.dto.response.UsuarioResponse;
 import edu.technosplay.NextClass.exception.RegraDeNegocioException;
 import edu.technosplay.NextClass.mapper.UsuarioMapper;
@@ -8,6 +11,9 @@ import edu.technosplay.NextClass.model.Usuario;
 import edu.technosplay.NextClass.repository.UsuarioRepository;
 import edu.technosplay.NextClass.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthServiceImpl implements AuthService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     @Override
     @Transactional
@@ -43,6 +51,24 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         return UsuarioMapper.toResponse(usuarioRepository.save(usuario));
+    }
+
+    @Override
+    public LoginResponse login(LoginRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.email(), request.senha())
+            );
+        } catch (AuthenticationException e) {
+            throw new RegraDeNegocioException("E-mail ou senha inválidos");
+        }
+
+        Usuario usuario = usuarioRepository.findByEmail(request.email())
+                .orElseThrow(() -> new RegraDeNegocioException("Usuário não encontrado"));
+
+        String token = jwtService.gerarToken(usuario);
+
+        return new LoginResponse(token, usuario.getNome(), usuario.getEmail(), usuario.getRole());
     }
 
     private void validarCpfUnico(String cpf) {

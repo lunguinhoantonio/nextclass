@@ -1,7 +1,9 @@
 package edu.technosplay.NextClass.controller;
 
 
+import edu.technosplay.NextClass.dto.request.LoginRequest;
 import edu.technosplay.NextClass.dto.request.UsuarioRequest;
+import edu.technosplay.NextClass.dto.response.LoginResponse;
 import edu.technosplay.NextClass.dto.response.UsuarioResponse;
 import edu.technosplay.NextClass.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +12,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -53,5 +57,40 @@ public class AuthController {
             )
             @RequestBody UsuarioRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.registrar(request));
+    }
+
+    @PostMapping("/login")
+    @Operation(
+            summary = "Autenticar usuário",
+            description = "Autentica o usuário com e-mail e senha. Retorna um token JWT e define um cookie httpOnly."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Login realizado com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
+    })
+    public ResponseEntity<LoginResponse> login(
+            @Valid @RequestBody LoginRequest request,
+            HttpServletResponse response) {
+
+        LoginResponse loginResponse = authService.login(request);
+
+        Cookie cookie = new Cookie("jwt", loginResponse.token());
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(24 * 60 * 60);
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(loginResponse);
+    }
+
+    @PostMapping("/logout")
+    @Operation(summary = "Logout", description = "Remove o cookie JWT do cliente.")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("jwt", "");
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return ResponseEntity.noContent().build();
     }
 }
