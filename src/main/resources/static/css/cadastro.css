@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&family=Open+Sans:wght@300;400;500;600&display=swap');
+
 * {
     padding: 0;
     margin: 0;
@@ -8,70 +9,57 @@
 
 body {
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     background: #c0c0c085;
+    padding: 2rem 0;
 }
 
 .container {
     width: 80%;
-    height: 80vh;
     display: flex;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.212);
+    border-radius: 4px;
+    overflow: hidden;
 }
 
+/* ── Lado esquerdo (imagem) ── */
 .form-image {
-    width: 50%;
+    width: 40%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     background-color: #141414;
-    padding: 1rem;
+    padding: 3rem 1rem;
+    position: sticky;
+    top: 2rem;
+    align-self: flex-start;
 }
 
 .form-image img {
-    width: 31rem;
+    width: 100%;
+    max-width: 22rem;
 }
 
+/* ── Lado direito (formulário) ── */
 .form {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    width: 60%;
     background-color: #fff;
     padding: 3rem;
 }
 
 .form-header {
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     display: flex;
     justify-content: space-between;
-}
-
-.login-button {
-    display: flex;
     align-items: center;
 }
 
-.login-button button {
-    border: none;
-    background-color: #5B21B6;
-    padding: 0.4rem 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.login-button button:hover {
-    background-color: #2d0096;
-}
-
-.login-button button a {
-    text-decoration: none;
-    font-weight: 500;
-    color: #fff;
+.form-header h1 {
+    font-size: 1.6rem;
+    position: relative;
 }
 
 .form-header h1::after {
@@ -80,98 +68,171 @@ body {
     width: 5rem;
     height: 0.3rem;
     background-color: #0f0e2e;
-    margin: 0 auto;
-    position: absolute;
+    margin-top: 0.5rem;
     border-radius: 10px;
 }
 
+.login-button button {
+    border: none;
+    background-color: #5B21B6;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color .2s;
+}
+
+.login-button button:hover { background-color: #2d0096; }
+
+.login-button button a {
+    text-decoration: none;
+    font-weight: 500;
+    color: #fff;
+}
+
+/* ── Grid de campos ── */
 .input-group {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    padding: 1rem 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+}
+
+/* campos que ocupam a linha inteira */
+.input-box.full {
+    grid-column: 1 / -1;
 }
 
 .input-box {
     display: flex;
     flex-direction: column;
-    margin-bottom: 1.1rem;
+    position: relative;
+}
+
+.input-box label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #000000c0;
+    margin-bottom: 0.4rem;
 }
 
 .input-box input {
-    margin: 0.6rem 0;
-    padding: 0.8rem 1.2rem;
+    padding: 0.75rem 1rem;
     border: none;
     border-radius: 10px;
     box-shadow: 1px 1px 6px #0000001c;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+    transition: background-color .15s;
 }
 
-.input-box input:hover {
-    background-color: #eeeeee75;
+.input-box input:hover         { background-color: #eeeeee75; }
+.input-box input:focus-visible  { outline: 1px solid #5f5f5f; }
+.input-box input::placeholder   { color: #000000be; }
+
+/* campo com erro */
+.input-box.invalido input { box-shadow: 0 0 0 1.5px #f87171; }
+
+.campo-erro {
+    font-size: .75rem;
+    color: #b91c1c;
+    margin-top: .3rem;
+    display: none;
 }
 
-.input-box input:focus-visible {
-    outline: 1px solid #5f5f5f;
+.input-box.invalido .campo-erro { display: block; }
+
+/* toggle olho senha */
+.toggle-senha {
+    position: absolute;
+    right: 1rem;
+    bottom: 0.78rem;
+    cursor: pointer;
+    color: #888;
+    font-size: .85rem;
 }
 
-.input-box label,
-.gender-title h6 {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #000000c0;
+/* separador de seção */
+.secao-titulo {
+    grid-column: 1 / -1;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #5B21B6;
+    padding-top: .5rem;
+    border-top: 1px solid #e5e7eb;
+    margin-top: .5rem;
 }
 
-.input-box input::placeholder {
-    color: #000000be;
+/* ── Botão principal ── */
+.continue-button {
+    margin-top: 2rem;
 }
-
 
 .continue-button button {
     width: 100%;
-    margin-top: 2.5rem;
     border: none;
     background-color: #5B21B6;
-    padding: 0.62rem;
+    padding: 0.8rem;
     border-radius: 5px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    transition: background-color .2s;
 }
 
-.continue-button button:hover {
-    background-color: #2d0096;
-}
+.continue-button button:hover { background-color: #2d0096; }
 
-.continue-button button a {
+.continue-button button span {
     text-decoration: none;
-    font-size: 0.93rem;
+    font-size: 1rem;
     font-weight: 500;
     color: #fff;
 }
 
-@media screen and (max-width: 1330px) {
-    .form-image {
-        display: none;
-    }
-    .container {
-        width: 50%;
-    }
-    .form {
-        width: 100%;
-    }
+/* ── Alertas ── */
+.alert {
+    padding: .75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.2rem;
+    font-size: .875rem;
+    font-weight: 500;
+    grid-column: 1 / -1;
 }
 
-@media screen and (max-width: 1064px) {
-    .container {
-        width: 90%;
-        height: auto;
-    }
-    .input-group {
+.alert-danger  { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+.alert-success { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+
+/* ── Spinner ── */
+.spinner {
+    display: none;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid #fff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading { opacity: .6; pointer-events: none; }
+
+/* ── Responsivo ── */
+@media screen and (max-width: 1100px) {
+    .form-image { display: none; }
+    .container  { width: 70%; }
+    .form       { width: 100%; }
+}
+
+@media screen and (max-width: 768px) {
+    body       { padding: 1rem 0; }
+    .container { width: 95%; }
+    .form      { padding: 1.5rem; }
+    .input-group { grid-template-columns: 1fr; }
+    .input-box.full { grid-column: 1; }
+    .form-header {
         flex-direction: column;
-        z-index: 5;
-        padding-right: 5rem;
-        max-height: 10rem;
-        overflow-y: scroll;
-        flex-wrap: nowrap;
+        gap: 1rem;
+        align-items: flex-start;
     }
-    
 }
