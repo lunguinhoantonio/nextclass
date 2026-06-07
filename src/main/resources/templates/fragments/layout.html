@@ -32,12 +32,10 @@
             <a th:href="@{/atividades}" th:classappend="${paginaAtual == 'atividades'} ? 'active'">Atividades</a>
             <a th:href="@{/atendimento}" th:classappend="${paginaAtual == 'atendimento'}? 'active'">Atendimento</a>
         </div>
-        <!-- Usuário autenticado -->
         <div sec:authorize="isAuthenticated()" style="display:flex; align-items:center; gap:0.5rem;">
             <span style="font-size:0.82rem; color:#555;" sec:authentication="name"></span>
             <button class="log-in" onclick="logout()">Sair</button>
         </div>
-        <!-- Usuário não autenticado -->
         <div sec:authorize="isAnonymous()">
             <a th:href="@{/login}">
                 <button class="log-in">Entrar</button>
