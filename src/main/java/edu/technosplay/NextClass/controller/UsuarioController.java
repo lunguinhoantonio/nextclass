@@ -33,6 +33,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "200", description = "Usuário encontrado"),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
+    @PreAuthorize("hasRole('COORDENADOR')")
     public ResponseEntity<UsuarioResponse> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(usuarioService.buscarPorId(id));
     }
@@ -46,7 +47,7 @@ public class UsuarioController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
     })
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('COORDENADOR')")
     public ResponseEntity<List<UsuarioResponse>> listar(
             @Parameter(description = "Filtrar por role (ALUNO, PROFESSOR, COORDENADOR)")
             @RequestParam(required = false) Role role,
@@ -64,7 +65,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "200", description = "Usuário desativado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('COORDENADOR')")
     public ResponseEntity<UsuarioResponse> desativar(
             @Parameter(description = "ID do usuário", example = "1")
             @PathVariable Long id) {
@@ -80,7 +81,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "200", description = "Usuário ativado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('COORDENADOR')")
     public ResponseEntity<UsuarioResponse> ativar(
             @Parameter(description = "ID do usuário", example = "1")
             @PathVariable Long id) {
