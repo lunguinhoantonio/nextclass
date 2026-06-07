@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="pt-BR"
       th:fragment="layout(titulo, paginaAtual, conteudo, estilos, scripts)">
 <head>
     <meta charset="UTF-8">
@@ -30,9 +32,17 @@
             <a th:href="@{/atividades}" th:classappend="${paginaAtual == 'atividades'} ? 'active'">Atividades</a>
             <a th:href="@{/atendimento}" th:classappend="${paginaAtual == 'atendimento'}? 'active'">Atendimento</a>
         </div>
-        <a th:href="@{/login}">
-            <button class="log-in">Entrar</button>
-        </a>
+        <!-- Usuário autenticado -->
+        <div sec:authorize="isAuthenticated()" style="display:flex; align-items:center; gap:0.5rem;">
+            <span style="font-size:0.82rem; color:#555;" sec:authentication="name"></span>
+            <button class="log-in" onclick="logout()">Sair</button>
+        </div>
+        <!-- Usuário não autenticado -->
+        <div sec:authorize="isAnonymous()">
+            <a th:href="@{/login}">
+                <button class="log-in">Entrar</button>
+            </a>
+        </div>
     </div>
     <button id="theme-toggle">
         <i class="fa-solid fa-moon"></i>
@@ -55,7 +65,7 @@
             <a th:href="@{/}">Início</a>
             <a th:href="@{/cursos}">Cursos</a>
             <a th:href="@{/atividades}">Atividades</a>
-            <a th:href="@{/login}">Login</a>
+            <a th:href="@{/login}" sec:authorize="isAnonymous()">Login</a>
         </div>
         <div class="footer-support">
             <h3>Atendimento</h3>
@@ -73,6 +83,13 @@
 <script th:src="@{/js/navbar.js}"></script>
 <script th:src="@{/js/darkmode.js}"></script>
 <th:block th:replace="${scripts} ?: ~{}"></th:block>
+
+<script>
+    async function logout() {
+        await fetch('/nextclass/auth/logout', { method: 'POST', credentials: 'same-origin' });
+        window.location.href = '/login?logout';
+    }
+</script>
 
 </body>
 </html>
