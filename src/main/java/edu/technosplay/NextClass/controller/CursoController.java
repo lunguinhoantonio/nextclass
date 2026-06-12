@@ -66,7 +66,7 @@ public class CursoController {
             @ApiResponse(responseCode = "404", description = "Professor não encontrado"),
             @ApiResponse(responseCode = "422", description = "Regra de negócio violada")
     })
-    //@PreAuthorize("hasRole('COORDENADOR')")
+    @PreAuthorize("hasRole('COORDENADOR')")
     public ResponseEntity<CursoResponse> criar(@Valid @RequestBody CursoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(cursoService.criar(request));
     }
@@ -82,7 +82,7 @@ public class CursoController {
             @ApiResponse(responseCode = "404", description = "Curso ou professor não encontrado"),
             @ApiResponse(responseCode = "422", description = "Regra de negócio violada")
     })
-    //@PreAuthorize("hasRole('COORDENADOR')")
+    @PreAuthorize("hasRole('COORDENADOR')")
     public ResponseEntity<CursoResponse> atualizar(@PathVariable Long id, @Valid @RequestBody CursoRequest request) {
         return ResponseEntity.ok(cursoService.atualizar(id, request));
     }
@@ -98,7 +98,7 @@ public class CursoController {
             @ApiResponse(responseCode = "404", description = "Curso ou professor não encontrado"),
             @ApiResponse(responseCode = "422", description = "Regra de negócio violada")
     })
-    //@PreAuthorize("hasRole('COORDENADOR')")
+    @PreAuthorize("hasRole('COORDENADOR')")
     public ResponseEntity<CursoResponse> atualizarPatch(
             @Parameter(description = "ID do curso", example = "1")
             @PathVariable Long id,
@@ -115,7 +115,7 @@ public class CursoController {
             @ApiResponse(responseCode = "200", description = "Curso desativado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Curso não encontrado")
     })
-    //@PreAuthorize("hasRole('COORDENADOR')")
+    @PreAuthorize("hasRole('COORDENADOR')")
     public ResponseEntity<CursoResponse> desativar(
             @Parameter(description = "ID do curso", example = "1")
             @PathVariable Long id) {
@@ -131,7 +131,7 @@ public class CursoController {
             @ApiResponse(responseCode = "200", description = "Curso ativado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Curso não encontrado")
     })
-    //@PreAuthorize("hasRole('COORDENADOR')")
+    @PreAuthorize("hasRole('COORDENADOR')")
     public ResponseEntity<CursoResponse> ativar(
             @Parameter(description = "ID do curso", example = "1")
             @PathVariable Long id) {
