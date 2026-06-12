@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:replace="~{fragments/layout :: layout(
           titulo='Cursos',
           paginaAtual='cursos',
           conteudo=~{::main},
           estilos=~{::link},
-          scripts=~{})}">
+          scripts=~{::script})}">
 
 <head>
     <link rel="stylesheet" th:href="@{/css/curso.css}">
@@ -14,57 +15,88 @@
 <body>
 <main>
     <section class="matricula-section">
-
         <div class="matricula-container">
 
             <div class="matricula-title">
-                <h1>Realizar Matrícula</h1>
-                <p>Escolha uma turma disponível para realizar sua matrícula.</p>
-            </div>
-
-            <div th:if="${#lists.isEmpty(cursos)}" class="sem-cursos">
-                <p>Nenhum curso disponível no momento.</p>
+                <h1>Cursos Disponíveis</h1>
+                <p>Conheça nossa grade de cursos e faça sua matrícula.</p>
             </div>
             <div th:each="curso : ${cursos}" class="turma-card">
 
                 <div class="turma-info">
-
                     <h2 th:text="${curso.nome}">Nome do Curso</h2>
 
                     <p>
-                        <i class="fa-regular fa-clock"></i>
-                        <span th:text="${#temporals.format(curso.horarioInicio, 'HH:mm')}">00:00</span>
-                        às
-                        <span th:text="${#temporals.format(curso.horarioFim, 'HH:mm')}">00:00</span>
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                        <strong>Professor:</strong>
+                        <span th:text="${curso.professor?.nome} ?: 'A definir'">Professor</span>
                     </p>
-
+                    <p>
+                        <i class="fa-solid fa-clock"></i>
+                        <strong>Horário:</strong>
+                        <span th:text="${curso.horarioInicio} + ' – ' + ${curso.horarioFim}">00:00 – 00:00</span>
+                    </p>
                     <p>
                         <i class="fa-solid fa-calendar-days"></i>
-                        <span th:text="${curso.diaInicio.name()} + ' a ' + ${curso.diaFim.name()}">
-                            Dias da semana
-                        </span>
+                        <strong>Dias:</strong>
+                        <span th:text="${curso.diaInicio.descricao} + ' a ' + ${curso.diaFim.descricao}">Seg a Sex</span>
                     </p>
-
                     <p>
                         <i class="fa-solid fa-users"></i>
-                        <span th:text="${curso.qtdVagas} + ' vagas disponíveis'">0 vagas disponíveis</span>
+                        <strong>Vagas:</strong>
+                        <span th:text="${curso.qtdVagas}">0</span>
                     </p>
-
                 </div>
 
-                <form th:action="@{/matriculas}" method="post">
-                    <input type="hidden" name="cursoId" th:value="${curso.id}">
-                    <button type="submit" class="btn-matricula">
+                <div>
+                    <button sec:authorize="hasRole('ALUNO')"
+                            class="btn-matricula"
+                            th:data-curso-id="${curso.id}"
+                            th:data-curso-nome="${curso.nome}"
+                            onclick="confirmarMatricula(this)">
                         Matricular-se
                     </button>
-                </form>
 
+                    <a sec:authorize="isAnonymous()"
+                       th:href="@{/login}"
+                       class="btn-matricula"
+                       style="text-decoration:none; display:inline-block; text-align:center;">
+                        Entre para se matricular
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal" id="modalMatricula" style="display:none;">
+        <div class="modal-content">
+
+            <span class="fechar" id="fecharMatricula">&times;</span>
+
+            <div id="matriculaConfirmacao">
+                <div class="modal-icone">📋</div>
+                <h2>Confirmar Matrícula</h2>
+                <p>Deseja se matricular no curso <strong id="nomeConfirmacao"></strong>?</p>
+                <div class="modal-botoes">
+                    <button id="btnCancelarMatricula" class="btn-modal-secundario">Cancelar</button>
+                    <button id="btnConfirmarMatricula" class="btn-modal-primario">Confirmar</button>
+                </div>
+            </div>
+
+            <div id="matriculaResultado" style="display:none;">
+                <div id="matriculaIcone" class="modal-resultado-icone"></div>
+                <h2 id="matriculaTitulo"></h2>
+                <p id="matriculaTexto"></p>
+                <div class="modal-botoes">
+                    <button id="btnFecharResultado" class="btn-modal-primario">Fechar</button>
+                </div>
             </div>
 
         </div>
-
-    </section>
+    </div>
 
 </main>
+
+<script th:src="@{/js/cursos.js}"></script>
 </body>
 </html>
