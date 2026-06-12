@@ -12,7 +12,7 @@ public record UsuarioRequest(
         @Schema(description = "Nome completo do usuário", example = "João da Silva")
         @NotBlank(message = "Nome é obrigatório")
         @Size(min = 3, max = 100, message = "Nome completo deve ter entre 3 e 100 caracteres")
-        @Pattern(regexp = "^[a-zA-ZÀ-ÿ\\s]+$", message = "O campo deve conter apenas letras.")
+        @Pattern(regexp = "^[a-zA-ZÀ-ÿ\\s]+$", message = "O nome completo deve conter apenas letras.")
         String nome,
 
         @Schema(description = "CPF sem formatação, apenas 11 dígitos numéricos", example = "12345678909")
