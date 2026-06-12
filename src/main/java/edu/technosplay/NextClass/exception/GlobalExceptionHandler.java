@@ -33,7 +33,9 @@ public class GlobalExceptionHandler {
             Map.entry("atendenteId", "Atendente"),
             Map.entry("cursoId", "Curso"),
             Map.entry("turmaId", "Turma"),
-            Map.entry("codigo", "Código da turma")
+            Map.entry("codigo", "Código da turma"),
+            Map.entry("conteudo", "Conteúdo da mensagem"),
+            Map.entry("nomeRemetente", "Nome do remetente")
     );
 
     @ExceptionHandler(AuthenticationException.class)
@@ -75,6 +77,11 @@ public class GlobalExceptionHandler {
         body.put("status", HttpStatus.BAD_REQUEST.value());
         body.put("erros", erros);
         return ResponseEntity.badRequest().body(body);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, Object>> handleArgumentoInvalido(IllegalArgumentException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
