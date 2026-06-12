@@ -1,5 +1,6 @@
 package edu.technosplay.NextClass.service.impl;
 
+import edu.technosplay.NextClass.dto.request.AtendimentoAutenticadoRequest;
 import edu.technosplay.NextClass.dto.request.AtendimentoRequest;
 import edu.technosplay.NextClass.dto.response.AtendimentoResponse;
 import edu.technosplay.NextClass.exception.RecursoNaoEncontradoException;
@@ -16,6 +17,7 @@ import edu.technosplay.NextClass.service.AtendimentoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,6 +29,38 @@ import java.util.List;
 public class AtendimentoServiceImpl implements AtendimentoService {
     private final AtendimentoRepository atendimentoRepository;
     private final UsuarioRepository usuarioRepository;
+
+    @Override
+    @Transactional
+    public AtendimentoResponse abrirAutenticado(AtendimentoAutenticadoRequest request, Usuario usuario) {
+        Usuario atendente = null;
+
+        if (request.atendenteId() != null) {
+            atendente = buscarUsuario(request.atendenteId());
+            validarAtendente(atendente);
+        }
+
+        Atendimento atendimento = Atendimento.builder()
+                .solicitante(usuario)
+                .atendente(atendente)
+                .nomeCompleto(usuario.getNome())
+                .cpf(usuario.getCpf())
+                .dataNascimento(usuario.getDataNascimento().atStartOfDay())
+                .email(usuario.getEmail())
+                .telefone(usuario.getTelefone())
+                .tipo(request.tipo())
+                .assunto(request.assunto())
+                .descricao(request.descricao())
+                .dataAgendamento(request.dataAgendamento())
+                .horaAgendamento(request.dataAgendamento().toLocalTime())
+                .build();
+
+        Atendimento salvo = atendimentoRepository.save(atendimento);
+        log.info("[ATENDIMENTO-AUTH] Aberto pelo usuário id={} | tipo={} | assunto={}",
+                usuario.getId(), request.tipo(), request.assunto());
+
+        return AtendimentoMapper.toResponse(salvo);
+    }
 
     @Override
     @Transactional
@@ -98,6 +132,12 @@ public class AtendimentoServiceImpl implements AtendimentoService {
     }
 
     @Override
+    public List<AtendimentoResponse> listar(TipoAtendimento tipo, StatusAtendimento status, Sort sort) {
+        return atendimentoRepository.findAllComFiltros(tipo, status, sort)
+                .stream().map(AtendimentoMapper::toResponse).toList();
+    }
+
+    @Override
     public List<AtendimentoResponse> listarPorSolicitante(Long solicitanteId) {
         return atendimentoRepository
                 .findAllBySolicitanteIdOrderByDataAgendamentoDesc(solicitanteId)
@@ -118,24 +158,6 @@ public class AtendimentoServiceImpl implements AtendimentoService {
     }
 
     @Override
-    public List<AtendimentoResponse> listarPorStatus(StatusAtendimento status) {
-        return atendimentoRepository.findAllByStatus(status)
-                .stream().map(AtendimentoMapper::toResponse).toList();
-    }
-
-    @Override
-    public List<AtendimentoResponse> listarPorTipo(TipoAtendimento tipo) {
-        return atendimentoRepository.findAllByTipo(tipo)
-                .stream().map(AtendimentoMapper::toResponse).toList();
-    }
-
-    @Override
-    public List<AtendimentoResponse> listarPorTipoEStatus(TipoAtendimento tipo, StatusAtendimento status) {
-        return atendimentoRepository.findAllByTipoAndStatus(tipo, status)
-                .stream().map(AtendimentoMapper::toResponse).toList();
-    }
-
-    @Override
     @Transactional
     public AtendimentoResponse atribuirAtendente(Long atendimentoId, Long atendenteId) {
         Atendimento atendimento = buscarEntidade(atendimentoId);
@@ -144,7 +166,7 @@ public class AtendimentoServiceImpl implements AtendimentoService {
                 atendimento.getStatus() == StatusAtendimento.CANCELADO) {
             throw new RegraDeNegocioException(
                     "Não é possível alterar o atendente de um atendimento com status" +
-                    atendimento.getStatus().getLabel()
+                            atendimento.getStatus().getLabel()
             );
         }
 
