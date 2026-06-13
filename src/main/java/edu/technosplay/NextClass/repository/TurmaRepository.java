@@ -21,4 +21,11 @@ public interface TurmaRepository extends JpaRepository<Turma, Long> {
           AND m.status = 'ATIVA'
     """)
     int contarMatriculasAtivas(@Param("turmaId") Long turmaId);
+
+    @Query("""
+        SELECT COUNT(m) FROM Matricula m
+        WHERE m.turma.curso.id = :cursoId
+          AND m.status = 'ATIVA'
+    """)
+    int contarMatriculasAtivasPorCurso(@Param("cursoId") Long cursoId);
 }

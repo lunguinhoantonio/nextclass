@@ -8,11 +8,15 @@ import java.util.Optional;
 
 @UtilityClass
 public class CursoMapper {
-    public static CursoResponse toResponse(Curso curso) {
+    public static CursoResponse toResponse(Curso curso, int vagasOcupadas) {
+        int totais = curso.getQtdVagas() != null ? curso.getQtdVagas() : 0;
+        int disponiveis = Math.max(0, totais - vagasOcupadas);
+
         return CursoResponse.builder()
                 .id(curso.getId())
                 .nome(curso.getNome())
                 .qtdVagas(curso.getQtdVagas())
+                .vagasDisponiveis(disponiveis)
                 .horarioInicio(curso.getHorarioInicio())
                 .horarioFim(curso.getHorarioFim())
                 .diaInicio(curso.getDiaInicio())
@@ -22,5 +26,9 @@ public class CursoMapper {
                 .criadoEm(curso.getCriadoEm())
                 .atualizadoEm(curso.getAtualizadoEm())
                 .build();
+    }
+
+    public static CursoResponse toResponse(Curso curso) {
+        return toResponse(curso, 0);
     }
 }

@@ -11,6 +11,7 @@ import edu.technosplay.NextClass.model.Usuario;
 import edu.technosplay.NextClass.model.enums.DiaSemana;
 import edu.technosplay.NextClass.model.enums.Role;
 import edu.technosplay.NextClass.repository.CursoRepository;
+import edu.technosplay.NextClass.repository.TurmaRepository;
 import edu.technosplay.NextClass.repository.UsuarioRepository;
 import edu.technosplay.NextClass.service.CursoService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import java.util.Optional;
 public class CursoServiceImpl implements CursoService {
     private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("HH:mm");
     private final CursoRepository cursoRepository;
+    private final TurmaRepository turmaRepository;
     private final UsuarioRepository usuarioRepository;
 
     @Override
@@ -36,14 +38,14 @@ public class CursoServiceImpl implements CursoService {
         return cursoRepository.findAll().stream()
                 .filter(c -> professorId == null || Objects.equals(c.getProfessor().getId(), professorId))
                 .filter(c -> ativo == null || c.isAtivo() == ativo)
-                .map(CursoMapper::toResponse)
+                .map(c -> CursoMapper.toResponse(c, turmaRepository.contarMatriculasAtivasPorCurso(c.getId())))
                 .toList();
     }
 
     @Override
     public CursoResponse listarPorId(Long id) {
         return cursoRepository.findById(id)
-                .map(CursoMapper::toResponse)
+                .map(c -> CursoMapper.toResponse(c, turmaRepository.contarMatriculasAtivasPorCurso(c.getId())))
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Curso não encontrado: " + id));
     }
 
