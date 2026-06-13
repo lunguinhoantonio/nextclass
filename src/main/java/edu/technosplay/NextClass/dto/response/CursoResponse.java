@@ -19,6 +19,9 @@ public record CursoResponse(
         @Schema(description = "Quantidade de vagas disponíveis", example = "30")
         Integer qtdVagas,
 
+        @Schema(description = "Vagas disponíveis (vagas totais menos matrículas ativas)", example = "18")
+        int vagasDisponiveis,
+
         @Schema(description = "Horário de início das aulas", example = "08:00:00")
         @JsonFormat(pattern = "HH:mm")
         LocalTime horarioInicio,
