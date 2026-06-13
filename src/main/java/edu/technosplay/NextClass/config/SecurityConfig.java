@@ -29,7 +29,6 @@ public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
 
     private static final String[] PUBLIC_ENDPOINTS = {
-            "/nextclass/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/api-docs/**",
@@ -61,6 +60,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/nextclass/cursos/**").hasRole("COORDENADOR")
                         .requestMatchers(HttpMethod.DELETE, "/nextclass/cursos/**").hasRole("COORDENADOR")
                         .requestMatchers("/nextclass/usuarios/**").hasRole("COORDENADOR")
+                        .requestMatchers(HttpMethod.GET, "/nextclass/atendimentos/*/mensagens").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/nextclass/atendimentos/*/mensagens/solicitante").permitAll()
                         .requestMatchers(HttpMethod.GET, "/nextclass/atendimentos/**")
                         .hasAnyRole("ATENDENTE", "COORDENADOR", "PROFESSOR", "ALUNO")
                         .requestMatchers(HttpMethod.PUT, "/nextclass/atendimentos/**")

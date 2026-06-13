@@ -34,7 +34,13 @@
         </div>
     </section>
 
-    <!-- MODAL -->
+    <section id="meusAtendimentos" class="meus-atendimentos" style="display:none;">
+        <div class="meus-atendimentos-container">
+            <h3>Meus Atendimentos</h3>
+            <div id="listaAtendimentos"></div>
+        </div>
+    </section>
+
     <div class="modal" id="modal">
         <div class="modal-content">
 
@@ -104,6 +110,35 @@
                     <button id="enviarAgendamento" type="button">Enviar Agendamento</button>
                 </div>
 
+            </div>
+
+        </div>
+    </div>
+    <div class="modal" id="modalChat">
+        <div class="modal-content modal-chat-content">
+
+            <div class="chat-header-modal">
+                <div>
+                    <strong id="chatTitulo">Chat do Atendimento</strong>
+                    <span id="chatAssunto"></span>
+                </div>
+                <span class="fechar" id="fecharChat">&times;</span>
+            </div>
+
+            <div id="chatAnonBar">
+                <span>⚠ Informe seu nome para enviar mensagens:</span>
+                <input type="text" id="chatNomeAnon" placeholder="Seu nome" maxlength="100">
+            </div>
+
+            <div id="chatMensagens">
+                <p id="chatVazio" class="chat-empty">Nenhuma mensagem ainda.</p>
+            </div>
+
+            <p id="chatErro"></p>
+
+            <div class="chat-composer">
+                <textarea id="chatInput" placeholder="Digite sua mensagem… (Enter envia)" rows="1"></textarea>
+                <button id="chatEnviar">&#9658;</button>
             </div>
 
         </div>

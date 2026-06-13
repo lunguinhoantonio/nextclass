@@ -9,6 +9,7 @@ import edu.technosplay.NextClass.mapper.CursoMapper;
 import edu.technosplay.NextClass.model.Curso;
 import edu.technosplay.NextClass.model.Usuario;
 import edu.technosplay.NextClass.model.enums.DiaSemana;
+import edu.technosplay.NextClass.model.enums.Role;
 import edu.technosplay.NextClass.repository.CursoRepository;
 import edu.technosplay.NextClass.repository.UsuarioRepository;
 import edu.technosplay.NextClass.service.CursoService;
@@ -157,8 +158,14 @@ public class CursoServiceImpl implements CursoService {
 
     private Optional<Usuario> procurarProfessor(Long professorId) {
         if (professorId == null) return Optional.empty();
-        return Optional.of(usuarioRepository.findById(professorId)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Professor não encontrado: " + professorId)));
+        Usuario usuario = usuarioRepository.findById(professorId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado: " + professorId));
+
+        if (usuario.getRole() != Role.PROFESSOR) {
+            throw new RegraDeNegocioException("O usuário informado não possui a role PROFESSOR");
+        }
+
+        return Optional.of(usuario);
     }
 
 }

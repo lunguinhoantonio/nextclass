@@ -213,3 +213,178 @@ body.dark-mode .btn-matricula:hover{
         font-size: 32px;
     }
 }
+
+/* ========================= */
+/* MODAL                     */
+/* ========================= */
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.55);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-content {
+    background: #FFFFFF;
+    width: 90%;
+    max-width: 440px;
+    padding: 40px 35px 35px;
+    border-radius: 20px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* FECHAR */
+
+.fechar {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    color: #6B7280;
+    cursor: pointer;
+    transition: 0.3s;
+    line-height: 1;
+}
+
+.fechar:hover {
+    color: #111827;
+    transform: scale(1.15);
+}
+
+/* ÍCONE */
+
+.modal-icone {
+    font-size: 52px;
+    margin-bottom: 12px;
+    line-height: 1;
+}
+
+/* TÍTULOS */
+
+.modal-content h2 {
+    font-size: 22px;
+    color: #111827;
+    margin-bottom: 10px;
+}
+
+.modal-content p {
+    color: #4B5563;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+/* BOTÕES */
+
+.modal-botoes {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.btn-modal-primario {
+    padding: 13px 28px;
+    border: none;
+    border-radius: 12px;
+    background: #5B21B6;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-modal-primario:hover {
+    background: #7C3AED;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(91, 33, 182, 0.35);
+}
+
+.btn-modal-primario:disabled {
+    background: #9CA3AF;
+    transform: none;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.btn-modal-secundario {
+    padding: 13px 28px;
+    border: 2px solid #5B21B6;
+    border-radius: 12px;
+    background: transparent;
+    color: #5B21B6;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-modal-secundario:hover {
+    background: #f3f0ff;
+    transform: translateY(-3px);
+}
+
+/* RESULTADO */
+
+.modal-resultado-icone {
+    font-size: 56px;
+    margin-bottom: 12px;
+    line-height: 1;
+}
+
+.modal-resultado-icone.sucesso { color: #16a34a; }
+.modal-resultado-icone.erro    { color: #dc2626; }
+
+/* ========================= */
+/* DARK MODE — MODAL         */
+/* ========================= */
+
+body.dark-mode .modal-content {
+    background: #1E293B;
+    border: 1px solid #334155;
+}
+
+body.dark-mode .modal-content h2 {
+    color: #FFFFFF;
+}
+
+body.dark-mode .modal-content p {
+    color: #CBD5E1;
+}
+
+body.dark-mode .fechar {
+    color: #94A3B8;
+}
+
+body.dark-mode .fechar:hover {
+    color: #FFFFFF;
+}
+
+body.dark-mode .btn-modal-secundario {
+    border-color: #7C3AED;
+    color: #7C3AED;
+}
+
+body.dark-mode .btn-modal-secundario:hover {
+    background: #1e1340;
+}
+
+body.dark-mode .btn-modal-primario:hover {
+    background: #9333EA;
+}
+
+#btnConfirmarMatricula {
+    border-radius: 12px;
+    padding: 12px;
+    color: #eee;
+    background-color: #7C3AED;
+}

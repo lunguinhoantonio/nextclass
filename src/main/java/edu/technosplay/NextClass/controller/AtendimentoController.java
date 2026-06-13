@@ -1,7 +1,9 @@
 package edu.technosplay.NextClass.controller;
 
+import edu.technosplay.NextClass.dto.request.AtendimentoAutenticadoRequest;
 import edu.technosplay.NextClass.dto.request.AtendimentoRequest;
 import edu.technosplay.NextClass.dto.response.AtendimentoResponse;
+import edu.technosplay.NextClass.model.Usuario;
 import edu.technosplay.NextClass.model.enums.StatusAtendimento;
 import edu.technosplay.NextClass.model.enums.TipoAtendimento;
 import edu.technosplay.NextClass.service.AtendimentoService;
@@ -12,8 +14,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +44,24 @@ public class AtendimentoController {
             @Valid @RequestBody AtendimentoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(atendimentoService.abrirPublico(request));
+    }
+
+    @PostMapping("/autenticado")
+    @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Abrir atendimento (autenticado)",
+            description = "Usuário logado agenda um atendimento. Dados pessoais são obtidos automaticamente do token JWT."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Agendamento realizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "422", description = "Regra de negócio violada")
+    })
+    public ResponseEntity<AtendimentoResponse> abrirAutenticado(
+            @Valid @RequestBody AtendimentoAutenticadoRequest request,
+            @AuthenticationPrincipal Usuario usuario) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(atendimentoService.abrirAutenticado(request, usuario));
     }
 
     @PostMapping("/solicitante/{solicitanteId}")
@@ -100,24 +123,35 @@ public class AtendimentoController {
 
     @GetMapping
     @Operation(
-            summary = "Listar atendimentos com filtros",
-            description = "Lista atendimentos filtrando por tipo e/ou status. Todos os parâmetros são opcionais."
+            summary = "Listar atendimentos",
+            description = "Lista todos os atendimentos com filtros opcionais de tipo, status e ordenação. " +
+                    "Sem filtros, retorna todos os atendimentos. " +
+                    "O parâmetro 'ordem' aceita 'asc' (mais antigos primeiro) ou 'desc' (mais recentes primeiro). " +
+                    "Padrão: desc."
     )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Valor de 'ordem' inválido. Use 'asc' ou 'desc'")
+    })
     public ResponseEntity<List<AtendimentoResponse>> listar(
             @Parameter(description = "Filtrar por tipo: SUPORTE, ACADEMICO, FINANCEIRO, OUTRO")
             @RequestParam(required = false) TipoAtendimento tipo,
             @Parameter(description = "Filtrar por status: AGENDADO, CONFIRMADO, REALIZADO, CANCELADO")
-            @RequestParam(required = false) StatusAtendimento status) {
+            @RequestParam(required = false) StatusAtendimento status,
+            @Parameter(description = "Ordenação por data de agendamento: 'asc' ou 'desc'. Padrão: desc")
+            @RequestParam(required = false, defaultValue = "desc") String ordem) {
 
-        if (tipo != null && status != null) {
-            return ResponseEntity.ok(atendimentoService.listarPorTipoEStatus(tipo, status));
-        } else if (tipo != null) {
-            return ResponseEntity.ok(atendimentoService.listarPorTipo(tipo));
-        } else if (status != null) {
-            return ResponseEntity.ok(atendimentoService.listarPorStatus(status));
-        }
+        Sort sort = resolverOrdem(ordem);
+        return ResponseEntity.ok(atendimentoService.listar(tipo, status, sort));
+    }
 
-        return ResponseEntity.ok(atendimentoService.listarPorStatus(StatusAtendimento.AGENDADO));
+    private Sort resolverOrdem(String ordem) {
+        return switch (ordem.toLowerCase()) {
+            case "asc" -> Sort.by(Sort.Direction.ASC,  "dataAgendamento");
+            case "desc" -> Sort.by(Sort.Direction.DESC, "dataAgendamento");
+            default -> throw new IllegalArgumentException(
+                    "Valor inválido para 'ordem': '" + ordem + "'. Use 'asc' ou 'desc'.");
+        };
     }
 
     @PatchMapping("/{atendimentoId}/atribuir-atendente/{atendenteId}")
