@@ -60,7 +60,7 @@
                  th:if="${iterStat.index < 3}">
                 <h3 th:text="${curso.nome}">Nome do Curso</h3>
                 <p th:text="${curso.qtdVagas} + ' Vagas'">xx/xx Vagas</p>
-                <a th:href="@{/cursos/{id}(id=${curso.id})}"><button>Ver mais</button></a>
+                <a th:href="@{/cursos}"><button>Ver mais</button></a>
             </div>
 
         </div>
