@@ -43,21 +43,27 @@
                     </p>
                     <p>
                         <i class="fa-solid fa-users"></i>
-                        <strong>Vagas:</strong>
-                        <span th:text="${curso.qtdVagas}">0</span>
+                        <strong>Vagas disponíveis:</strong>
+                        <span th:text="${curso.vagasDisponiveis} + ' de ' + ${curso.qtdVagas}">0 de 0</span>
                     </p>
                 </div>
 
                 <div>
+                    <div th:if="${curso.vagasDisponiveis == 0}" class="badge-turma-cheia">
+                        <span class="badge-icone">⏳</span>
+                        <span>Turma cheia</span>
+                        <p>Aguarde a abertura de uma nova turma.</p>
+                    </div>
                     <button sec:authorize="hasRole('ALUNO')"
+                            th:if="${curso.vagasDisponiveis > 0}"
                             class="btn-matricula"
                             th:data-curso-id="${curso.id}"
                             th:data-curso-nome="${curso.nome}"
                             onclick="confirmarMatricula(this)">
                         Matricular-se
                     </button>
-
                     <a sec:authorize="isAnonymous()"
+                       th:if="${curso.vagasDisponiveis > 0}"
                        th:href="@{/login}"
                        class="btn-matricula"
                        style="text-decoration:none; display:inline-block; text-align:center;">
