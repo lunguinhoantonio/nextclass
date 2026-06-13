@@ -2,17 +2,17 @@
    MATRÍCULA — modal de confirmação
    ============================================================ */
 
-const modalMatricula       = document.getElementById("modalMatricula");
-const fecharMatriculaEl    = document.getElementById("fecharMatricula");
-const btnCancelar          = document.getElementById("btnCancelarMatricula");
-const btnConfirmar         = document.getElementById("btnConfirmarMatricula");
-const btnFecharResultado   = document.getElementById("btnFecharResultado");
-const nomeConfirmacao      = document.getElementById("nomeConfirmacao");
+const modalMatricula = document.getElementById("modalMatricula");
+const fecharMatriculaEl = document.getElementById("fecharMatricula");
+const btnCancelar = document.getElementById("btnCancelarMatricula");
+const btnConfirmar = document.getElementById("btnConfirmarMatricula");
+const btnFecharResultado = document.getElementById("btnFecharResultado");
+const nomeConfirmacao = document.getElementById("nomeConfirmacao");
 const matriculaConfirmacao = document.getElementById("matriculaConfirmacao");
-const matriculaResultado   = document.getElementById("matriculaResultado");
-const matriculaIcone       = document.getElementById("matriculaIcone");
-const matriculaTitulo      = document.getElementById("matriculaTitulo");
-const matriculaTexto       = document.getElementById("matriculaTexto");
+const matriculaResultado = document.getElementById("matriculaResultado");
+const matriculaIcone = document.getElementById("matriculaIcone");
+const matriculaTitulo = document.getElementById("matriculaTitulo");
+const matriculaTexto = document.getElementById("matriculaTexto");
 
 let cursoIdPendente = null;
 
@@ -36,19 +36,18 @@ window.addEventListener("click", e => { if (e.target === modalMatricula) fecharM
 btnConfirmar.addEventListener("click", async () => {
     if (!cursoIdPendente) return;
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-        window.location.href = "/login";
-        return;
-    }
-
     btnConfirmar.disabled = true;
     btnConfirmar.textContent = "Matriculando...";
 
     try {
         const turmasRes = await fetch(`/nextclass/turmas?cursoId=${cursoIdPendente}&ativa=true`, {
-            headers: { "Authorization": `Bearer ${token}` }
+            credentials: "include"
         });
+
+        if (turmasRes.status === 401 || turmasRes.status === 403) {
+            window.location.href = "/login";
+            return;
+        }
 
         if (!turmasRes.ok) throw new Error("Não foi possível buscar as turmas do curso.");
 
@@ -59,12 +58,15 @@ btnConfirmar.addEventListener("click", async () => {
 
         const matRes = await fetch("/nextclass/matriculas", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({ turmaId })
         });
+
+        if (matRes.status === 401 || matRes.status === 403) {
+            window.location.href = "/login";
+            return;
+        }
 
         if (matRes.ok) {
             const matricula = await matRes.json();
