@@ -388,3 +388,45 @@ body.dark-mode .btn-modal-primario:hover {
     color: #eee;
     background-color: #7C3AED;
 }
+
+/* ========================= */
+/* TURMA CHEIA               */
+/* ========================= */
+
+.badge-turma-cheia {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+    padding: 14px 22px;
+    border-radius: 12px;
+    background: #FEF3C7;
+    border: 2px solid #F59E0B;
+    color: #92400E;
+    font-weight: bold;
+    font-size: 15px;
+    min-width: 180px;
+}
+
+.badge-turma-cheia .badge-icone {
+    font-size: 28px;
+    line-height: 1;
+}
+
+.badge-turma-cheia p {
+    margin: 0;
+    font-size: 13px;
+    font-weight: normal;
+    color: #78350F;
+}
+
+body.dark-mode .badge-turma-cheia {
+    background: #1C1A0F;
+    border-color: #D97706;
+    color: #FCD34D;
+}
+
+body.dark-mode .badge-turma-cheia p {
+    color: #FDE68A;
+}
