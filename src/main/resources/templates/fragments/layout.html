@@ -29,7 +29,6 @@
         <div class="menu-links">
             <a th:href="@{/}" th:classappend="${paginaAtual == 'inicio'} ? 'active'">Início</a>
             <a th:href="@{/cursos}" th:classappend="${paginaAtual == 'cursos'} ? 'active'">Cursos</a>
-            <a th:href="@{/atividades}" th:classappend="${paginaAtual == 'atividades'} ? 'active'">Atividades</a>
             <a th:href="@{/atendimento}" th:classappend="${paginaAtual == 'atendimento'}? 'active'">Atendimento</a>
         </div>
         <div sec:authorize="isAuthenticated()" style="display:flex; align-items:center; gap:0.5rem;">
@@ -62,7 +61,6 @@
             <h3>Navegação</h3>
             <a th:href="@{/}">Início</a>
             <a th:href="@{/cursos}">Cursos</a>
-            <a th:href="@{/atividades}">Atividades</a>
             <a th:href="@{/login}" sec:authorize="isAnonymous()">Login</a>
         </div>
         <div class="footer-support">
