@@ -59,7 +59,7 @@
                  th:each="curso, iterStat : ${cursos}"
                  th:if="${iterStat.index < 3}">
                 <h3 th:text="${curso.nome}">Nome do Curso</h3>
-                <p th:text="${curso.qtdVagas} + ' Vagas'">xx/xx Vagas</p>
+                <p th:text="${curso.vagasDisponiveis} + ' de ' + ${curso.qtdVagas} + ' vagas'">0 de 0</p>
                 <a th:href="@{/cursos}"><button>Ver mais</button></a>
             </div>
 
